@@ -9,16 +9,21 @@ void Player::increase_score(int d) {
 	this->score += d;
 }
 
-void Player::get_shot()
-{
-
+void Player::get_shot(int x, int y){
+	board.make_visible(x, y);
+	if (board.is_sunk()){
+		board.decr_working_ships();
+	}
 }
 
-void Player::set_name(std::string name) {
+void Player::set_name(std::string name){
 	this->name = name;
 }
 
-Board Player::get_board()
-{
-	return board;
+bool Player::is_alive(){
+	return board.is_alive();
+}
+
+bool Player::can_shoot(int x, int y){
+	return board.can_shoot(x, y);
 }
