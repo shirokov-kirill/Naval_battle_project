@@ -1,29 +1,43 @@
+#include "pch.h"
 #include"Player.h"
 
-Player::Player() {
+Player::Player() noexcept {
 	this->score = 0;
 	this->name = "";
 }
 
-void Player::increase_score(int d) {
+void Player::increase_score(int d) noexcept{
 	this->score += d;
 }
 
-void Player::get_shot(int x, int y){
-	board.make_visible(x, y);
-	if (board.is_sunk()){
-		board.decr_working_ships();
-	}
+void Player::get_shot(int x, int y, int num) {
+	board.get_shot(x, y, num);
 }
 
-void Player::set_name(std::string name){
+void Player::set_name(std::string name) {
 	this->name = name;
 }
 
-bool Player::is_alive(){
+std::string Player::get_name()noexcept {
+	return name;
+}
+
+int Player::get_score()noexcept {
+	return score;
+}
+
+bool Player::is_alive() noexcept {
 	return board.is_alive();
 }
 
-bool Player::can_shoot(int x, int y){
-	return board.can_shoot(x, y);
+bool Player::can_shoot(int x, int y, int num) {
+	return board.can_shoot(x, y, num);
+}
+
+Player& Player::operator=(Player& other)noexcept {
+	board = other.board;
+	score = other.score;
+	combo = other.combo;
+	name = other.name;
+	return *this;
 }

@@ -27,10 +27,10 @@ void Controller::game() {
 
 void Controller::action_game_cycle(){
 	std::pair<int, int> shot = interface.ask_shot();
-	while (!players[current_player % 2 == 0 ? current_player+1 : current_player - 1].can_shoot(shot.first, shot.second)) {
+	while (!players[current_player % 2 == 0 ? current_player+1 : current_player - 1].can_shoot(shot.first, shot.second, current_player % 2 == 0 ? current_player + 1 : current_player - 1)) {
 		interface.show_error("incorrect turn");
 		shot = interface.ask_shot();
 	}
-	players[current_player % 2 == 0 ? current_player + 1 : current_player - 1].get_shot(shot.first, shot.second);
+	players[current_player % 2 == 0 ? current_player + 1 : current_player - 1].get_shot(shot.first, shot.second, current_player % 2 == 0 ? current_player + 1 : current_player - 1);
 	current_player = (current_player + 1) % 2;//не 2
 }
