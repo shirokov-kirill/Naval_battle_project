@@ -1,5 +1,5 @@
-#include "pch.h"
 #include "Board.h"
+#include "pch.h"
 
 bool Board::is_sunk(std::size_t x, std::size_t y) {
     if (board[x][y] == Ships::fire) {
@@ -52,6 +52,37 @@ Board::Board() {
 }
 
 Board::~Board() {}
+
+Board::Board(const Board& other) {
+    board = std::vector<std::vector<Ships >>(BH, std::vector<Ships >(BW));
+    for (size_t i = 0; i < BH; i++) {
+        for (size_t j = 0; i < BW; j++) {
+            board[i][j] = other.board[i][j];
+        }
+    }
+    working_ships = other.working_ships;
+    visible = std::vector<std::vector<std::bitset<PL_CNT>>>(BH, std::vector<std::bitset<PL_CNT>>(BW));
+    for (size_t i = 0; i < BH; i++) {
+        for (size_t j = 0; i < BW; j++) {
+            visible[i][j] = other.visible[i][j];
+        }
+    }
+}
+
+Board& Board::operator=(Board& other) noexcept {
+    for (size_t i = 0; i < BH; i++) {
+        for (size_t j = 0; i < BW; j++) {
+            board[i][j] = other.board[i][j];
+        }
+    }
+    working_ships = other.working_ships;
+    for (size_t i = 0; i < BH; i++) {
+        for (size_t j = 0; i < BW; j++) {
+            visible[i][j] = other.visible[i][j];
+        }
+    }
+    return *this;
+}
 
 void Board::place_ship(ShipPlacement placement) {
     if (can_place_ship(placement)) {
