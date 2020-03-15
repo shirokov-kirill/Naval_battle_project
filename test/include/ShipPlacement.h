@@ -1,6 +1,7 @@
 #ifndef NAVAL_BATTLE_SHIP_PLACEMENT_H
 #define NAVAL_BATTLE_SHIP_PLACEMENT_H
 
+
 enum class Ships {
     fire = -1,
     water = 0,
@@ -20,5 +21,4 @@ struct ShipPlacement {
     orientation orient;
     Ships type;
 };
-
 #endif
