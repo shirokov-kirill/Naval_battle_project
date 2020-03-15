@@ -4,20 +4,7 @@
 #include <cstdlib>
 #include <bitset>
 #include <vector>
-
-enum class Ships {
-    fire = -1,
-    water = 0,
-    small = 1,
-    middle = 2,
-    regular = 3,
-    carrier = 4
-};
-
-enum class orientation {
-    horisontal = 0,
-    vertical = 1,
-};
+#include "ShipPlacement.h"
 
 static std::size_t BH, BW;
 static const int  PL_CNT = 2;
