@@ -1,4 +1,6 @@
-#pragma once
+#ifndef NAVAL_BATTLE_SHIP_PLACEMENT_H
+#define NAVAL_BATTLE_SHIP_PLACEMENT_H
+
 
 enum class Ships {
     fire = -1,
@@ -10,6 +12,14 @@ enum class Ships {
 };
 
 enum class orientation {
-    horisontal = 0,
+    horizontal = 0,
     vertical = 1,
 };
+
+struct ShipPlacement {
+    int x, y;
+    orientation orient;
+    Ships type;
+};
+
+#endif
