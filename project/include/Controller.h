@@ -2,6 +2,7 @@
 #define CONTROLLER_H
 
 #include"Player.h"
+#include "Interface.h"
 #include <vector>
 
 class Controller{
@@ -9,7 +10,7 @@ class Controller{
 public:
 	Controller();
 	void game();
-	void action_game_cycle();//добавить increase_score(каким-то образом)
+	void action_game_cycle();
 	void setup_player();
 
 private:

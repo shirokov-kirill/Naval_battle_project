@@ -9,7 +9,7 @@ Controller::Controller() {
 Controller::~Controller(){}
 
 void Controller::setup_player() {
-	for (int i = 0; i < 2; i++) {//не 2
+	for (int i = 0; i < 2; i++) {
 		players[i].set_name(interface.read_name(i));
 	}
 }
@@ -19,7 +19,7 @@ void Controller::game() {
 		action_game_cycle();
 	}
 	if (current_player == 0){
-		winners[(players.size()-1) / 2] = players[2];//не 2
+		winners[(players.size()-1) / 2] = players[2];
 		return;
 	}
 	winners[(current_player - 1) / 2] = players[current_player - 1];
@@ -32,5 +32,5 @@ void Controller::action_game_cycle(){
 		shot = interface.ask_shot();
 	}
 	players[current_player % 2 == 0 ? current_player + 1 : current_player - 1].get_shot(shot.first, shot.second, current_player % 2 == 0 ? current_player + 1 : current_player - 1);
-	current_player = (current_player + 1) % 2;//не 2
+	current_player = (current_player + 1) % 2;//пїЅпїЅ 2
 }
