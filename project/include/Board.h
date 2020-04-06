@@ -15,7 +15,8 @@ public:
     bool can_place_ship(ShipPlacement placement);
     void place_ship(ShipPlacement placement);
 
-    Ships get_tile_status(std::size_t, std::size_t);
+    Ships get_tile_status(std::size_t, std::size_t) const ;
+	bool get_visuality_status(std::size_t x, std::size_t y, int player_num) const ;
 
     bool can_shoot(std::size_t x, std::size_t y, int player_num);
     void get_shot(std::size_t x, std::size_t y, int player_num);

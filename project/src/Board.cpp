@@ -31,13 +31,11 @@ bool Board::is_sunk(std::size_t x, std::size_t y) {
     }
 }
 
-Ships Board::get_tile_status(std::size_t x, std::size_t y) {
-    return board[x][y];
-}
+Ships Board::get_tile_status(std::size_t x, std::size_t y) const { return board[x][y]; }
 
-bool Board::is_alive() noexcept {
-    return working_ships > 0;
-}
+bool Board::get_visuality_status(std::size_t x, std::size_t y, int player_num) const { return visible[x][y][player_num]; }
+
+bool Board::is_alive() noexcept { return working_ships > 0; }
 
 void Board::set_H_W(std::size_t h, std::size_t w) {
     BH = h + 2;
