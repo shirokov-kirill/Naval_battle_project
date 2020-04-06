@@ -33,7 +33,7 @@ bool Board::is_sunk(std::size_t x, std::size_t y) {
 
 Ships Board::get_tile_status(std::size_t x, std::size_t y) const { return board[x][y]; }
 
-bool Board::get_visuality_status(std::size_t x, std::size_t y, int player_num) const { return visible[x][y][player_num]; }
+bool Board::is_visible(std::size_t x, std::size_t y, int player_num) const { return visible[x][y][player_num]; }
 
 bool Board::is_alive() noexcept { return working_ships > 0; }
 
