@@ -48,3 +48,7 @@ bool Player::is_visible(int x, int y, int num) {
 Ships Player::get_cell(int x, int y) {
     return board.get_tile_status(x, y);
 }
+
+void Player::place_ship(ShipPlacement placement) {
+    board.place_ship(placement);
+}

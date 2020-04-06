@@ -19,6 +19,7 @@ public:
 	Player& operator=(Player&)noexcept;
 	bool is_visible(int, int, int);
 	Ships get_cell(int, int);
+	void place_ship(ShipPlacement);
 
 private:
 	Board board;
