@@ -10,18 +10,20 @@ public:
 	Player()noexcept;
 	~Player() = default;
 	void increase_score(int)noexcept;
-	void get_shot(int, int, int);//тест для Board
+	void get_shot(int, int, int);//пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ Board
 	void set_name(std::string);
 	std::string get_name()noexcept;
 	int get_score()noexcept;
-	bool is_alive()noexcept;//тест для Board
-	bool can_shoot(int, int, int);//тест для Board
+	bool is_alive()noexcept;//пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ Board
+	bool can_shoot(int, int, int);//пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ Board
 	Player& operator=(Player&)noexcept;
+	bool is_visible(int, int, int);
+	Ships get_cell(int, int);
 
 private:
 	Board board;
 	int score;
-	int combo;//на будущее, пока что не реализовано
+	int combo;//пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	std::string name;
 
 };
