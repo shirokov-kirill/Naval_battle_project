@@ -1,7 +1,10 @@
-# Проект "Морской бой"(С++)
+﻿# Проект "Морской бой"(С++)
 ## Содержание
-Сборка:
-В папке qt/untitled прописать:
+сборка:
+`
+mkdir build
+cd build
+qmake ..
 make
-./project
-make clean
+project.exe
+`
