@@ -10,7 +10,7 @@ INCLUDEPATH += .
 # feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
-DEFINES += QT_DEPRECATED_WARNINGS
+#DEFINES += QT_DEPRECATED_WARNINGS
 
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -19,7 +19,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 # Input
 QT += widgets
-HEADERS += mainwindow.h SignalHelper.h
-FORMS += mainwindow.ui
-SOURCES += main.cpp mainwindow.cpp
+HEADERS += mainwindow.h SignalHelper.h \
+    Controller.h \
+    Defines.h \
+    Images.h \
+    Utility.h \
+    ../../project/include/Player.h \
+    ../../project/include/Board.h \
+    ../../project/include/ShipPlacement.h
+FORMS += mainwindow_2.ui
+SOURCES += main.cpp mainwindow.cpp \
+    Controller.cpp \
+    Images.cpp \
+    Utility.cpp \
+    ../../project/src/Board.cpp \
+    ../../project/src/Player.cpp
 RESOURCES += res.qrc
