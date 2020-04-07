@@ -7,15 +7,16 @@
 
 #include "ShipPlacement.h"
 
-static std::size_t BH, BW;
+static std::size_t BH = 12, BW = 12;
 static const int  PL_CNT = 2;
 
 class Board {
 public:
     bool can_place_ship(ShipPlacement placement);
-    void place_ship(ShipPlacement placement);
+    bool place_ship(ShipPlacement placement);
 
     Ships get_tile_status(std::size_t, std::size_t);
+    bool is_visible(std::size_t x, std::size_t y, int player_num) const ;
 
     bool can_shoot(std::size_t x, std::size_t y, int player_num);
     void get_shot(std::size_t x, std::size_t y, int player_num);

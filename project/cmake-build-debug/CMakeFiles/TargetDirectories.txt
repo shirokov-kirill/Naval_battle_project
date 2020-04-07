@@ -1,3 +1,0 @@
-/home/alexandr/Рабочий стол/Naval_battle_project/project/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/alexandr/Рабочий стол/Naval_battle_project/project/cmake-build-debug/CMakeFiles/NavalBattle.dir
-/home/alexandr/Рабочий стол/Naval_battle_project/project/cmake-build-debug/CMakeFiles/edit_cache.dir

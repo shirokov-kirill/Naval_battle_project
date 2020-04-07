@@ -1,4 +1,5 @@
-#include "Board.h"
+#include "../include/Board.h"
+#include <iostream>
 
 bool Board::is_sunk(std::size_t x, std::size_t y) {
     if (board[x][y] == Ships::fire) {
@@ -32,8 +33,11 @@ bool Board::is_sunk(std::size_t x, std::size_t y) {
 }
 
 Ships Board::get_tile_status(std::size_t x, std::size_t y) {
+
     return board[x][y];
 }
+
+bool Board::is_visible(std::size_t x, std::size_t y, int player_num) const { return visible[x][y][player_num]; }
 
 bool Board::is_alive() noexcept {
     return working_ships > 0;
@@ -83,7 +87,7 @@ Board& Board::operator=(Board& other) noexcept {
     return *this;
 }
 
-void Board::place_ship(ShipPlacement placement) {
+bool Board::place_ship(ShipPlacement placement) {
     if (can_place_ship(placement)) {
         if (placement.orient == orientation::horizontal) {
             for (std::size_t i = 0; i < static_cast<std::size_t >(placement.type); i++) {
@@ -94,7 +98,9 @@ void Board::place_ship(ShipPlacement placement) {
                 board[placement.x][placement.y + i] = placement.type;
             }
         }
+        return true;
     }
+    return false;
 }
 
 bool Board::can_place_ship(ShipPlacement placement) {
@@ -142,12 +148,12 @@ void Board::get_shot(std::size_t x, std::size_t y, int player_num) {
                         visible[i][j][player_num] = true;
                     }
                 }
-            } else if (board[x - 1][y] == Ships::fire || board[x + 1][y] == Ships::fire) {
+            } else if (board[x][y-1] == Ships::fire || board[x][y+1] == Ships::fire) {
                 std::size_t down = y - 1, up = y + 1;
                 while (board[x][down] == Ships::fire) down--;
                 while (board[x][up] == Ships::fire) up++;
                 for (std::size_t i = x - 1; i <= x + 1; i++) {
-                    for (std::size_t j = down j <= up; j++) {
+                    for (std::size_t j = down; j <= up; j++) {
                         visible[i][j][player_num] = true;
                     }
                 }
