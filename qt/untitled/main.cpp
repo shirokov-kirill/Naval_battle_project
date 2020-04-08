@@ -6,7 +6,6 @@
 #include <QObject>
 #include <QInputDialog>
 #include <QDir>
-#include "SignalHelper.h"
 #include "mainwindow.h"
 
 
