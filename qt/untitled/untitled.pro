@@ -19,7 +19,7 @@ INCLUDEPATH += .
 
 # Input
 QT += widgets
-HEADERS += mainwindow.h SignalHelper.h \
+HEADERS += mainwindow.h \
     Controller.h \
     Defines.h \
     Images.h \

@@ -4,7 +4,7 @@
 ```
 mkdir build
 cd build
-qmake ..
+qmake ../untitled.pro
 make
 project.exe
 ```
