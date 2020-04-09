@@ -32,55 +32,53 @@ bool Board::is_sunk(std::size_t x, std::size_t y) {
     }
 }
 
-Ships Board::get_tile_status(std::size_t x, std::size_t y) {
-
-    return board[x][y];
-}
+Ships Board::get_tile_status(std::size_t x, std::size_t y) { return board[x][y]; }
 
 bool Board::is_visible(std::size_t x, std::size_t y, int player_num) const { return visible[x][y][player_num]; }
 
 bool Board::is_alive() noexcept {
     return working_ships > 0;
 }
-
+// useless shit, doesn't work
+/*
 void Board::set_H_W(std::size_t h, std::size_t w) {
     BH = h + 2;
     BW = w + 2;
 }
-
+*/
 Board::Board() {
-    board = std::vector<std::vector<Ships >> (BH, std::vector<Ships > (BW, Ships::water));
+    board = std::vector<std::vector<Ships >> (BHA, std::vector<Ships > (BWA, Ships::water));
     working_ships = 0;
-    visible = std::vector<std::vector<std::bitset<PL_CNT>>> (BH, std::vector<std::bitset<PL_CNT>> (BW, 0));
+    visible = std::vector<std::vector<std::bitset<PL_CNT>>> (BHA, std::vector<std::bitset<PL_CNT>> (BWA, 0));
 }
 
 Board::~Board() {}
 
 Board::Board(const Board& other) {
-    board = std::vector<std::vector<Ships >>(BH, std::vector<Ships >(BW));
-    for (size_t i = 0; i < BH; i++) {
-        for (size_t j = 0; i < BW; j++) {
+    board = std::vector<std::vector<Ships >>(BHA, std::vector<Ships >(BWA));
+    for (size_t i = 0; i < BHA; i++) {
+        for (size_t j = 0; i < BWA; j++) {
             board[i][j] = other.board[i][j];
         }
     }
     working_ships = other.working_ships;
-    visible = std::vector<std::vector<std::bitset<PL_CNT>>>(BH, std::vector<std::bitset<PL_CNT>>(BW));
-    for (size_t i = 0; i < BH; i++) {
-        for (size_t j = 0; i < BW; j++) {
+    visible = std::vector<std::vector<std::bitset<PL_CNT>>>(BHA, std::vector<std::bitset<PL_CNT>>(BWA));
+    for (size_t i = 0; i < BHA; i++) {
+        for (size_t j = 0; i < BWA; j++) {
             visible[i][j] = other.visible[i][j];
         }
     }
 }
 
 Board& Board::operator=(Board& other) noexcept {
-    for (size_t i = 0; i < BH; i++) {
-        for (size_t j = 0; i < BW; j++) {
+    for (size_t i = 0; i < BHA; i++) {
+        for (size_t j = 0; i < BWA; j++) {
             board[i][j] = other.board[i][j];
         }
     }
     working_ships = other.working_ships;
-    for (size_t i = 0; i < BH; i++) {
-        for (size_t j = 0; i < BW; j++) {
+    for (size_t i = 0; i < BHA; i++) {
+        for (size_t j = 0; i < BWA; j++) {
             visible[i][j] = other.visible[i][j];
         }
     }
@@ -104,20 +102,20 @@ bool Board::place_ship(ShipPlacement placement) {
 }
 
 bool Board::can_place_ship(ShipPlacement placement) {
-    if (placement.x >= BW || placement.y >= BH) return false;
+    if (std::size_t(placement.x) >= BWA || std::size_t(placement.y) >= BHA) return false;
     if (placement.orient == orientation::horizontal) {
-        if (placement.x + static_cast<std::size_t >(placement.type) < BW) {
+        if (placement.x + static_cast<std::size_t >(placement.type) < BWA) {
             for (std::size_t i = placement.x - 1; i <= placement.x + 1 + static_cast<std::size_t >(placement.type); i++) {
-                for (std::size_t j = placement.y - 1; j <= placement.y + 1; j++) {
+                for (std::size_t j = placement.y - 1; j <= std::size_t(placement.y) + 1; j++) {
                     if (board[i][j] != Ships::water) return false;
                 }
             }
             return true;
         } else return false;
     } else if (placement.orient == orientation::vertical) {
-        if (placement.y + static_cast<std::size_t >(placement.type) < BH) {
-            for (std::size_t i = placement.x - 1; i <= placement.x + 1; i++) {
-                for (std::size_t j = placement.y - 1; j <= placement.y + 1 + static_cast<std::size_t >(placement.type); j++) {
+        if (std::size_t(placement.y) + static_cast<std::size_t >(placement.type) - 1 < BHA) {
+            for (std::size_t i = placement.x - 1; i <= std::size_t(placement.x) + 1; i++) {
+                for (std::size_t j = placement.y - 1; j <= placement.y + static_cast<std::size_t >(placement.type); j++) {
                     if (board[i][j] != Ships::water) return false;
                 }
             }

@@ -3,6 +3,7 @@
 
 
 enum class Ships {
+    drownen_ship = -420,
     fire = -1,
     water = 0,
     small = 1,

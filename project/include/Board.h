@@ -7,7 +7,8 @@
 
 #include "ShipPlacement.h"
 
-static std::size_t BH = 12, BW = 12;
+static const std::size_t BH = 10, BW = 10;
+static const std::size_t BHA = BH + 2, BWA = BW + 2;
 static const int  PL_CNT = 2;
 
 class Board {
