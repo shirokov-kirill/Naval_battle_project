@@ -4,17 +4,22 @@
 #include <QPainter>
 #include <QImage>
 
+#include <windows.h>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , controller(new Controller()) //TODO: basic exception guarantee
+    , controller(std::make_unique<Controller>())
 {
     ui->setupUi(this);
-    pictures.load();
+    pictures.load();    
 
-    connect( controller, SIGNAL(stateChanged()), this, SLOT(redraw()) );
-    connect( controller, SIGNAL(stateLabelChanged()), this, SLOT(changeStateLabel()) );
+    connect( controller.get(), SIGNAL(stateChanged()), this, SLOT(redraw()) );
+    connect( controller.get(), SIGNAL(stateLabelChanged()), this, SLOT(changeStateLabel()) );
+    connect( controller.get(), SIGNAL(labelOpponentChanged()), this, SLOT(changeLabelOpponent()));
+//    connect(this, SIGNAL(sig_connectToServer()), controller, SLOT(sl_connectToServer()));
+//    connect(this, SIGNAL(sig_sendData()), controller, SLOT(sl_sendAuthData()));
 
 }
 
@@ -160,19 +165,26 @@ void MainWindow::changeStateLabel() {
         setStatus("making step");
 }
 
-
-void MainWindow::setPlayer( const QString& player ) {
-    ui->labelPlayer->setText(player);
+void MainWindow::setName(QString new_name) {
+    name = new_name;
 }
 
+void MainWindow::changeLabelOpponent() {
+    ui->labelOpponent->setText(QString::fromStdString(controller->enemyPlayer()->get_name()));
+}
 
 void MainWindow::on_actionStart_triggered() {
     bool ok;
-    QString text = QInputDialog::getText(this, tr("Ввод"),
+    QString name = QInputDialog::getText(this, tr("Ввод"),
                             tr("Ваше имя:"), QLineEdit::Normal,
                             "Player", &ok);
-    if (!ok)
-        return;
-    if (controller->getState() == ST_PLACING_SHIPS)
+    if (!ok || controller->getState() == ST_PLACING_SHIPS) {
         qDebug() << "Nope";
+        return;
+    }
+    controller->myPlayer()->set_name(name.toStdString());
+    controller->connectToServer();
+//    controller->sendAuthData(name, "010101010");
 }
+
+

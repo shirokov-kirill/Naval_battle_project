@@ -19,11 +19,11 @@ INCLUDEPATH += .
 
 # Input
 QT += widgets
+QT += network
 HEADERS += mainwindow.h \
     Controller.h \
     Defines.h \
     Images.h \
-    InfoDialog.h \
     Model.h \
     Utility.h \
     ../../project/include/Player.h \
@@ -33,7 +33,6 @@ FORMS += mainwindow_2.ui
 SOURCES += main.cpp mainwindow.cpp \
     Controller.cpp \
     Images.cpp \
-    InfoDialog.cpp \
     Utility.cpp \
     ../../project/src/Board.cpp \
     ../../project/src/Player.cpp

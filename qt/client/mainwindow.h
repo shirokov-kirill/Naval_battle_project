@@ -13,6 +13,12 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+class Test : public QObject {
+    Q_OBJECT
+public:
+    ~Test() {qDebug() << "Dtor!";}
+};
+
 
 class MainWindow : public QMainWindow
 {
@@ -21,6 +27,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void setName(QString name);
 
 protected:
     void paintEvent( QPaintEvent* );
@@ -31,22 +38,23 @@ private slots:
     void redraw();
     void showGameResult( GameResult result );
     void changeStateLabel();
-
-
     void on_actionStart_triggered();
+    void changeLabelOpponent();
+
+signals:
+    void sig_connectToServer();
+    void sig_sendAuthData(QString name, QString Field);
 
 private:
     QImage myFieldImage();
     QImage enemyFieldImage();
     QImage getFieldImage( char );
     void setStatus( const QString& status );
-    void setPlayer( const QString& player );
 
 private:
     Ui::MainWindow *ui;
-//    Player *player1;
-//    Player *player2;
-    Controller *controller;
+//    Controller *controller;
+    std::unique_ptr<Controller> controller;
     QString name;
 };
 
