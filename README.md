@@ -1,10 +1,14 @@
 ﻿# Проект "Морской бой"(С++)
-## Содержание
-сборка:
+Для сборки проекта требуется qmake. Собирать лучше в отдельной папке, т.к. появляется много промежуточных файлов.
+Клиент:
 ```
-mkdir build
-cd build
-qmake ../untitled.pro
+qmake client.pro
 make
-project.exe
+client.exe
+```
+Сервер:
+```
+qmake server.pro
+make
+client.exe
 ```

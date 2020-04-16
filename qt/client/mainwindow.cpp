@@ -8,16 +8,13 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , player1(new Player())
-    , player2(new Player())
-    , controller(new Controller(player1, player2))
+    , controller(new Controller()) //TODO: basic exception guarantee
 {
     ui->setupUi(this);
     pictures.load();
 
     connect( controller, SIGNAL(stateChanged()), this, SLOT(redraw()) );
     connect( controller, SIGNAL(stateLabelChanged()), this, SLOT(changeStateLabel()) );
-    connect( controller, SIGNAL(playerChanged()), this, SLOT(changePlayer()) );
 
 }
 
@@ -59,10 +56,6 @@ QImage MainWindow::getFieldImage( char fld )
     QImage image( FIELD_WIDTH, FIELD_HEIGHT, QImage::Format_ARGB32 );
     Ships cell;
     image.fill( 0 );
-    int cur_player = controller->getCurPlayer();
-    int other_player = cur_player ^ 1;
-    Player* player[2];
-    player[0] = player1, player[1] = player2;
     QPainter painter( &image );
 
     double cfx = 1.0 * FIELD_WIDTH / 10.0;
@@ -73,38 +66,22 @@ QImage MainWindow::getFieldImage( char fld )
         {
             int i1 = i+1, j1 = j+1;
 
-//            if (cur_player == 0) {
-//                if (fld == 0) {
-//                    cell = player1->get_cell( i1, j1 );
-//                }
-//                else {
-//                    cell = Ships::water;
-//                    if (player2->is_visible(i1, j1, 0)) cell = player2->get_cell(i1, j1);
-//                }
-//            }
-
-//            else {
-//                if (fld == 0) cell = player2->get_cell(i1, j1);
-//                else {
-//                    cell = Ships::water;
-//                    if (player1->is_visible(i1, j1, 1)) cell = player1->get_cell(i1, j1);
-//                }
-//            }
             if (fld == 0) {
-                  cell = player[cur_player]->get_cell( i1, j1 );
+                  cell = controller->myPlayer()->get_cell( i1, j1 );
             }
             else {
                   cell = Ships::water;
-                  if (player[other_player]->is_visible(i1, j1, cur_player)) cell = player[other_player]->get_cell(i1, j1);
+                  if (controller->enemyPlayer()->is_visible(i1, j1, 0))
+                      cell = controller->enemyPlayer()->get_cell(i1, j1);
             }
 
             if (cell == Ships::water) {
                 if (fld == 0)
-                    if (player[cur_player]->is_visible(i1, j1, other_player))
+                    if (controller->myPlayer()->is_visible(i1, j1, 1))
                         painter.drawImage( i * cfx, j * cfy, pictures.get("dot") );
                     else {}
                 else
-                    if (player[other_player]->is_visible(i1, j1, cur_player))
+                    if (controller->enemyPlayer()->is_visible(i1, j1, 0))
                         painter.drawImage( i * cfx, j * cfy, pictures.get("dot") );
             }
 
@@ -126,7 +103,7 @@ void MainWindow::mousePressEvent( QMouseEvent* ev )
 {
     QPoint pos = ev->pos();
     pos.setY( pos.y() - this->centralWidget()->y() );
-    controller->onMousePressed( pos, ev->button() == Qt::LeftButton );
+    controller->onMousePressed( pos );
 }
 
 void MainWindow::closeEvent( QCloseEvent* event )
@@ -175,26 +152,27 @@ void MainWindow::setStatus( const QString& status )
 }
 
 void MainWindow::changeStateLabel() {
-    setStatus("making step");
+    if (controller->getState() == ST_PLACING_SHIPS)
+        setStatus("placing ships");
+    if (controller->getState() == ST_WAITING_STEP)
+        setStatus("waiting step");
+    if (controller->getState() == ST_MAKING_STEP)
+        setStatus("making step");
 }
 
-MainWindow::MainWindow(const MainWindow &other)
-    :ui(other.ui)
-    , player1(other.player1)
-    , player2(other.player2)
-    , controller(other.controller) {}
 
 void MainWindow::setPlayer( const QString& player ) {
     ui->labelPlayer->setText(player);
 }
 
-void MainWindow::changePlayer() {
-    if (controller->getCurPlayer() == 0) {
-        setPlayer("player2");
-    }
-    else setPlayer("player1");
+
+void MainWindow::on_actionStart_triggered() {
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("Ввод"),
+                            tr("Ваше имя:"), QLineEdit::Normal,
+                            "Player", &ok);
+    if (!ok)
+        return;
+    if (controller->getState() == ST_PLACING_SHIPS)
+        qDebug() << "Nope";
 }
-
-
-
-

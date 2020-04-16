@@ -17,21 +17,24 @@ enum GameResult
     GR_LOST = -1
 };
 
-//enum State
-//{
-//    ST_PLACING_SHIPS,
-//    ST_WAITING_STEP,
-//    ST_MAKING_STEP
-//};
+enum State
+{
+    ST_PLACING_SHIPS,
+    ST_WAITING_STEP,
+    ST_MAKING_STEP
+};
 
 class Controller: public QWidget
 {
     Q_OBJECT
 public:
-    Controller( Player *player1, Player *player2 );
+    Controller();
 //    ~Controller();
-    void onMousePressed( const QPoint& position, bool setShip = true );
-    int  getCurPlayer();
+    void onMousePressed( const QPoint& pos );
+    Player* myPlayer();
+    Player* enemyPlayer();
+    State getState();
+    void setState(State new_state);
 
 
 signals:
@@ -42,14 +45,10 @@ signals:
     void playerChanged();
 
 private:
-
-
-
-private:
-    Player *player1;
-    Player *player2;
-    int cur_player;
-    Player* player[2];
+    Player *my_player;
+    Player *enemy_player;
+    State state;
+    int ships_number;
 };
 
 #endif // CONTROLLER_H

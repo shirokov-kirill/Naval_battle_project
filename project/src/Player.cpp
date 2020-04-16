@@ -4,7 +4,6 @@ Player::Player() noexcept {
 	this->score = 0;
 	this->name = "";
 	this->cur_ship = 1;
-	this->state = State::ST_PLACING_SHIPS;
 }
 
 void Player::increase_score(int d) noexcept{
@@ -62,12 +61,4 @@ int Player::get_cur_ship() {
 
 void Player::inc_ship() {
 	cur_ship++;
-}
-
-State Player::getState() {
-	return state;
-}
-
-void Player::setState(State new_state) {
-	state = new_state;
 }

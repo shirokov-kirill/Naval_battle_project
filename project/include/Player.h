@@ -4,12 +4,12 @@
 #include <string>
 #include "../include/Board.h"
 
-enum State
-{
-    ST_PLACING_SHIPS,
-    ST_WAITING_STEP,
-    ST_MAKING_STEP
-};
+//enum State
+//{
+//    ST_PLACING_SHIPS,
+//    ST_WAITING_STEP,
+//    ST_MAKING_STEP
+//};
 
 class Player {
 
@@ -29,18 +29,18 @@ public:
 	bool place_ship(ShipPlacement);
 	int get_cur_ship();
 	void inc_ship();
-	State getState();
-	void setState(State);
+//	State getState();
+//	void setState(State);
 
-private:
-	State state; //zaebalo...
+//private:
+//	State state; //zaebalo...
 
 private:
 	Board board;
 	int score;
 	int combo;
 	std::string name;
-	int cur_ship;
+    int cur_ship;
 };
 
 #endif

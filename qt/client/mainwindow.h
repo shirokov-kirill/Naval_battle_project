@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include <QMouseEvent>
+#include <QInputDialog>
 #include "../../project/include/Player.h"
 #include "Images.h"
 #include "Controller.h"
@@ -19,7 +20,6 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
-    MainWindow(const MainWindow &other);
     ~MainWindow();
 
 protected:
@@ -31,7 +31,9 @@ private slots:
     void redraw();
     void showGameResult( GameResult result );
     void changeStateLabel();
-    void changePlayer();
+
+
+    void on_actionStart_triggered();
 
 private:
     QImage myFieldImage();
@@ -42,10 +44,10 @@ private:
 
 private:
     Ui::MainWindow *ui;
-    Player *player1;
-    Player *player2;
+//    Player *player1;
+//    Player *player2;
     Controller *controller;
-
+    QString name;
 };
 
 
