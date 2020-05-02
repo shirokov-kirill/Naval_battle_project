@@ -72,13 +72,13 @@ Board::Board(const Board& other) {
 
 Board& Board::operator=(Board& other) noexcept {
     for (size_t i = 0; i < BHA; i++) {
-        for (size_t j = 0; i < BWA; j++) {
+        for (size_t j = 0; j < BWA; j++) {
             board[i][j] = other.board[i][j];
         }
     }
     working_ships = other.working_ships;
     for (size_t i = 0; i < BHA; i++) {
-        for (size_t j = 0; i < BWA; j++) {
+        for (size_t j = 0; j < BWA; j++) {
             visible[i][j] = other.visible[i][j];
         }
     }
