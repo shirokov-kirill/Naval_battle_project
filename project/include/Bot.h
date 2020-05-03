@@ -11,7 +11,7 @@ public:
     pair<int, int> make_fight_step(Player* other_player);
     void make_placement();
 private:
-    pair<int, int> int current_ship_taget;
+    pair<int, int> current_ship_taget;
 };
 
 
