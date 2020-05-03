@@ -3,7 +3,7 @@
 Player::Player() noexcept {
 	this->score = 0;
 	this->name = "";
-	this->cur_ship = 1;
+	this->cur_ship = 0;
 }
 
 void Player::increase_score(int d) noexcept{
@@ -40,6 +40,7 @@ Player& Player::operator=(Player& other)noexcept {
 	score = other.score;
 	combo = other.combo;
 	name = other.name;
+	cur_ship = other.cur_ship;
 	return *this;
 }
 
@@ -52,7 +53,10 @@ Ships Player::get_cell(int x, int y) {
 }
 
 bool Player::place_ship(ShipPlacement placement) {
-    return board.place_ship(placement);
+    bool f = board.place_ship(placement);
+    if(f)
+        inc_ship();
+    return f;
 }
 
 int Player::get_cur_ship() {
