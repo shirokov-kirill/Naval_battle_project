@@ -57,14 +57,14 @@ Board::~Board() {}
 Board::Board(const Board& other) {
     board = std::vector<std::vector<Ships >>(BHA, std::vector<Ships >(BWA));
     for (size_t i = 0; i < BHA; i++) {
-        for (size_t j = 0; i < BWA; j++) {
+        for (size_t j = 0; j < BWA; j++) {
             board[i][j] = other.board[i][j];
         }
     }
     working_ships = other.working_ships;
     visible = std::vector<std::vector<std::bitset<PL_CNT>>>(BHA, std::vector<std::bitset<PL_CNT>>(BWA));
     for (size_t i = 0; i < BHA; i++) {
-        for (size_t j = 0; i < BWA; j++) {
+        for (size_t j = 0; j < BWA; j++) {
             visible[i][j] = other.visible[i][j];
         }
     }
