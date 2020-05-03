@@ -23,10 +23,7 @@ void Controller::onMousePressed( const QPoint& pos ) {
 
         qDebug() << "Ship at" << point.x() + 1 << point.y() + 1;
 
-        ShipPlacement pos;
-        pos.x = point.x() + 1, pos.y = point.y() + 1;
-        pos.orient = orientation::vertical;
-        pos.type = Ships(ships_number);
+        ShipPlacement pos(point.x() + 1, point.y() + 1, orientation::vertical, Ships(ships_number));
 
         if (myPlayer()->place_ship(pos)) {
             --ships_number;
@@ -132,6 +129,7 @@ void Controller::parseAuth(const QStringList &args) {
 void Controller::parseStep(const QStringList &args) {
     if (args[0] != QString("step"))
         return;
+// todo
 
 }
 
@@ -156,7 +154,7 @@ void Controller::on_dataRecieved() {
     QString data = client->readLine();
     qDebug() << data;
     parse(data);
-
+// todo
 }
 
 void Controller::on_errorRecieved(QAbstractSocket::SocketError err) {

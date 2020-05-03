@@ -15,7 +15,8 @@ class Player {
 
 public:
 	Player()noexcept;
-	~Player() = default;
+	virtual ~Player();
+
 	void increase_score(int)noexcept;
 	void get_shot(int, int, int);
 	void set_name(std::string);
@@ -29,6 +30,8 @@ public:
 	bool place_ship(ShipPlacement);
 	int get_cur_ship();
 	void inc_ship();
+
+	virtual bool is_bot() const noexcept;
 //	State getState();
 //	void setState(State);
 
