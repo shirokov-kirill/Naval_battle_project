@@ -7,13 +7,9 @@
 
 TEST_SUITE("testing ShipPlacement class"){
     TEST_CASE("testing constructor"){
-        auto shipPlacement = new ShipPlacement();
-        shipPlacement->x = 3;
-        shipPlacement->y = 5;
-        shipPlacement->type = Ships::carrier;
-        shipPlacement->orient = orientation::vertical;
-        CHECK_EQ((int)shipPlacement->type, 4);
-        CHECK_EQ((int)shipPlacement->orient, 1);
+        ShipPlacement sp(3, 5, orientation::vertical, Ships::carrier);
+        CHECK_EQ(sp->type, Ships::carrier);
+        CHECK_EQ(sp.orient, orientation::vertical);
     }
 };
 
