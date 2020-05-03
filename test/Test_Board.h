@@ -8,8 +8,7 @@ TEST_SUITE("testing Board class"){
     TEST_CASE("testing constructors with can_place_ship() method"){
         SUBCASE("no_args constructor"){
             Board board1;
-            ShipPlacement sp;
-            sp.x = 4, sp.y = 2, sp.orient = orientation::vertical, sp.type = Ships::small;
+            ShipPlacement sp(4, 2, orientation::vertical, Ships::small);
             CHECK_EQ(board1.can_place_ship(sp), true);
             sp.x = 0, sp.y = 0;
             CHECK_EQ(board1.can_place_ship(sp), false);
@@ -28,8 +27,7 @@ TEST_SUITE("testing Board class"){
         }
         SUBCASE("const& constructor"){
             Board board1;
-            ShipPlacement sp;
-            sp.x = 4, sp.y = 2, sp.orient = orientation::vertical, sp.type = Ships::small;
+            ShipPlacement sp(4, 2, orientation::vertical, Ships::small);
             board1.place_ship(sp);
             Board board2(board1);
             CHECK_EQ(board2.is_alive(), true);
@@ -38,8 +36,7 @@ TEST_SUITE("testing Board class"){
     }
     TEST_CASE("testing is_alive() method"){
         Board board;
-        ShipPlacement sp;
-        sp.x = 4, sp.y = 2, sp.orient = orientation::vertical, sp.type = Ships::small;
+        ShipPlacement sp(4, 2, orientation::vertical, Ships::small);
         board.place_ship(sp);
         CHECK_EQ(board.is_alive(), true);
         board.get_shot(4,2,1);
@@ -55,8 +52,7 @@ TEST_SUITE("testing Board class"){
     }
     TEST_CASE("testing operator="){
         Board board1;
-        ShipPlacement sp;
-        sp.x = 4, sp.y = 2, sp.orient = orientation::vertical, sp.type = Ships::small;
+        ShipPlacement sp(4, 2, orientation::vertical, Ships::small);
         board1.place_ship(sp);
         Board board2 = board1;
         CHECK_EQ(board2.is_alive(), board1.is_alive());
@@ -74,8 +70,7 @@ TEST_SUITE("testing Board class"){
     TEST_CASE("testing get_shot() method"){
         SUBCASE("small ship"){
             Board board1;
-            ShipPlacement sp;
-            sp.x = 5, sp.y = 6, sp.orient = orientation::vertical, sp.type = Ships::small;
+            ShipPlacement sp(5, 6, orientation::vertical, Ships::small);
             board1.place_ship(sp);
             CHECK_EQ(board1.is_alive(), true);
             board1.get_shot(5,6,1);
@@ -93,8 +88,7 @@ TEST_SUITE("testing Board class"){
         }
         SUBCASE("other vertical"){
             Board board1;
-            ShipPlacement sp;
-            sp.x = 5, sp.y = 6, sp.orient = orientation::vertical, sp.type = Ships::middle;
+            ShipPlacement sp(5, 6, orientation::vertical, Ships::middle);
             board1.place_ship(sp);
             CHECK_EQ(board1.is_alive(), true);
             board1.get_shot(5,6,1);
@@ -126,8 +120,7 @@ TEST_SUITE("testing Board class"){
         }
         SUBCASE("other horizontal"){
             Board board1;
-            ShipPlacement sp;
-            sp.x = 5, sp.y = 6, sp.orient = orientation::horizontal, sp.type = Ships::middle;
+            ShipPlacement sp(5, 6, orientation::horizontal, Ships::middle);
             board1.place_ship(sp);
             CHECK_EQ(board1.is_alive(), true);
             board1.get_shot(5,6,1);
@@ -167,8 +160,7 @@ TEST_SUITE("testing Board class"){
     }
     TEST_CASE("testing get_tile_status() method"){
         Board board1;
-        ShipPlacement sp;
-        sp.x = 5, sp.y = 6, sp.orient = orientation::horizontal, sp.type = Ships::middle;
+        ShipPlacement sp(5, 6, orientation::horizontal, Ships::middle);
         board1.place_ship(sp);
         CHECK_EQ(board1.get_tile_status(5,6), Ships::middle);
         CHECK_EQ(board1.get_tile_status(5,7), Ships::middle);
@@ -176,8 +168,7 @@ TEST_SUITE("testing Board class"){
     }
     TEST_CASE("testing can_place_ship() method"){
         Board board1;
-        ShipPlacement sp;
-        sp.x = 0, sp.y = 6, sp.orient = orientation::horizontal, sp.type = Ships::middle;
+        ShipPlacement sp(0, 6, orientation::horizontal, Ships::middle);
         CHECK_EQ(board1.can_place_ship(sp), false);
         sp.x = 5;
         board1.place_ship(sp);
@@ -202,8 +193,7 @@ TEST_SUITE("testing Board class"){
     }
     TEST_CASE("testing place_ship() method"){
         Board board1;
-        ShipPlacement sp;
-        sp.x = 1, sp.y = 6, sp.orient = orientation::horizontal, sp.type = Ships::middle;
+        ShipPlacement sp(1, 6, orientation::horizontal, Ships::middle);
         board1.place_ship(sp);
         CHECK_EQ(board1.get_tile_status(1,1), Ships::middle);
         CHECK_EQ(board1.get_tile_status(1,2), Ships::middle);
