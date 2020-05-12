@@ -14,8 +14,8 @@
 class Player {
 
 public:
-    Player() noexcept;
-	~Player() = default;
+  Player() noexcept;
+	virtual ~Player();
 	Player& operator=(Player&) noexcept ;
 
 	void increase_score(int) noexcept ;
@@ -36,8 +36,10 @@ public:
 	int get_cur_ship();
 	void inc_ship();
 
+	virtual bool is_bot() const noexcept;
+
 	std::string convert_to_string();
-    void set_board_from_string(std::string src);
+  void set_board_from_string(std::string src);
 
 private:
 	Board board;

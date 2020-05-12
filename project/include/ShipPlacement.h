@@ -25,6 +25,7 @@ struct ShipPlacement {
     int x, y;
     orientation orient;
     Ships type;
+    ShipPlacement(int x_, int y_, orientation ori, Ships t) : x(x_), y(y_), orient(ori), type(t) {};
 };
 
 #endif
