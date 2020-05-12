@@ -66,3 +66,7 @@ int Player::get_cur_ship() {
 void Player::inc_ship() {
 	cur_ship++;
 }
+
+bool Player::is_bot() const noexcept {
+    return false;
+}
