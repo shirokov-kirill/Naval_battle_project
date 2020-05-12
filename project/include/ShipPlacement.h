@@ -1,6 +1,7 @@
 #ifndef NAVAL_BATTLE_SHIP_PLACEMENT_H
 #define NAVAL_BATTLE_SHIP_PLACEMENT_H
 
+static const int  PL_CNT = 2;
 
 enum class Ships {
     drownen_ship = -420,

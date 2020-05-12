@@ -67,6 +67,24 @@ void Player::inc_ship() {
 	cur_ship++;
 }
 
+
+std::string Player::convert_to_string() {
+    std::string ret_val = "";
+    for (std::size_t i = 0; i < board.BHA; i++) {
+        for (std::size_t j = 0; j < board.BWA; j++) {
+            ret_val += char(static_cast<int>(board.get_tile_status(i, j)) + '0');
+        }
+    }
+    return ret_val;
+}
+
+void Player::set_board_from_string(std::string src) {
+    for (std::size_t i = 0; i < 12; i++) { // some improvements will be needed
+        for (std::size_t j = 0; j < 12; j++) { // some improvements will be needed
+            board.set_tile_status(i, j, static_cast<Ships >(src[12 * i + j] - '0'));
+        }
+    }
+
 bool Player::is_bot() const noexcept {
-    return false;
+    return false; 
 }
