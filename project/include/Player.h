@@ -14,26 +14,30 @@
 class Player {
 
 public:
-	Player()noexcept;
+    Player() noexcept;
 	~Player() = default;
-	void increase_score(int)noexcept;
+	Player& operator=(Player&) noexcept ;
+
+	void increase_score(int) noexcept ;
+	int get_score() noexcept ;
+
 	void get_shot(int, int, int);
-	void set_name(std::string);
-	std::string get_name()noexcept;
-	int get_score()noexcept;
-	bool is_alive()noexcept;
 	bool can_shoot(int, int, int);
-	Player& operator=(Player&)noexcept;
+
+	void set_name(std::string);
+	std::string get_name() noexcept ;
+
+	bool is_alive() noexcept ;
+
 	bool is_visible(int, int, int);
 	Ships get_cell(int, int);
 	bool place_ship(ShipPlacement);
+
 	int get_cur_ship();
 	void inc_ship();
-//	State getState();
-//	void setState(State);
 
-//private:
-//	State state; //zaebalo...
+	std::string convert_to_string();
+    void set_board_from_string(std::string src);
 
 private:
 	Board board;
