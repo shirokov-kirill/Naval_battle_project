@@ -14,6 +14,8 @@
 class Player {
 
 public:
+        Board board; // sorry i had to do it to make it work
+
   Player() noexcept;
 	virtual ~Player();
 	Player& operator=(Player&) noexcept ;
@@ -42,7 +44,7 @@ public:
   void set_board_from_string(std::string src);
 
 private:
-	Board board;
+
 	int score;
 	int combo;
 	std::string name;
