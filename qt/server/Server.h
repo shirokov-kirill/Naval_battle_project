@@ -25,7 +25,7 @@ public:
     ~Server();
     void start();
     void setState(ServerState new_state);
-    int recipientNumber(QTcpSocket* sender); //по отправителю узнает получателя
+    int senderNumber(QTcpSocket* sender); //по отправителю узнает получателя
     void endGame(); //отключает сокеты и меняет состояние сервера
     void sendAuthRequest();
     void sendFlags();

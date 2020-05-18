@@ -38,34 +38,15 @@ void Server::sl_newUser() {
         if (clients.size() == 2) {
             setState(SS_AUTHORIZATION);
             sendAuthRequest();
+            sendFlags();
         }
     }
 }
 
 void Server::sl_handleClient(QTcpSocket *client_socket) {
-//    int recipient = recipientNumber(client_socket);
     QString data = client_socket->readLine();
-    if (state == SS_AUTHORIZATION) {
-        clients.at(authorizating_player)->client_data = data;
-        authorizating_player ^= 1;
-        if (authorizating_player == 0) {
-            clients[0]->send(clients[1]->client_data);
-            clients[1]->send(clients[0]->client_data);
-            Sleep(500);
-            sendFlags();
-            setState(SS_GAME_IN_PROCESS);
-            return;
-        }
-        sendAuthRequest();
-    }
-    if (state == SS_GAME_IN_PROCESS) {
-        int recipient = recipientNumber(client_socket);
-        clients.at(recipient)->send(data);
-    }
-    QStringList kek = data.split(QString(":"));
-    qDebug() << kek[0];
-    if (data == "zdarova")
-        qDebug() << "server: ku!";
+    qDebug() << data;
+    clients.at(senderNumber(client_socket)^1)->send(data);
 }
 
 void Server::sendFlags() {
@@ -77,7 +58,7 @@ void Server::setState(ServerState new_state) {
     state = new_state;
 }
 
-int Server::recipientNumber(QTcpSocket* sender) {
+int Server::senderNumber(QTcpSocket *sender) {
     return (sender == clients[0]->ptr()) ? 0 : 1;
 }
 
@@ -87,5 +68,6 @@ void Server::endGame() {
 }
 
 void Server::sendAuthRequest() {
-    clients[authorizating_player]->send("giveauth:");
+    clients[0]->send("giveauth:");
+    clients[1]->send("giveauth:");
 }

@@ -62,7 +62,16 @@ void Controller::onMousePressed( const QPoint& pos ) {
         cmd = QString( "step:%1:%2:" ).arg( point.x() ).arg( point.y() );
         qDebug() << cmd;
 
-        setState(ST_WAITING_STEP);
+
+        if (enemyPlayer()->get_cell(point.x()+1, point.y()+1) == Ships::water) {
+            setState(ST_WAITING_STEP);
+        }
+
+        sendStep(point);
+
+
+
+
 //        emit stateChanged();
         return;
     }
@@ -126,13 +135,13 @@ void Controller::parseAuth(const QStringList &args) {
 //    enemyPlayer()->setField(args[2].toStdString());
 
     emit labelOpponentChanged();
-//    sendOk();
 }
 
 void Controller::parseStep(const QStringList &args) {
-    if (args[0] != QString("step"))
+    if (args.at(0) != QString("step"))
         return;
-
+    int x = args.at(1).toInt(), y = args.at(2).toInt();
+    qDebug() << x << ' ' << y;
 }
 
 void Controller::parseGiveAuth(const QStringList &args) {
@@ -141,21 +150,19 @@ void Controller::parseGiveAuth(const QStringList &args) {
     sendAuthData(QString::fromStdString(myPlayer()->get_name()), "0101023049304");
 }
 
-void Controller::sendOk() {
-    QTextStream os(client.get());
-    os.setAutoDetectUnicode(true);
-    os << "ok";
-    client->flush();
-}
 
 
 
 //slots
 
 void Controller::on_dataRecieved() {
-    QString data = client->readLine();
-    qDebug() << data;
-    parse(data);
+    QString data;
+    while (client->canReadLine()) {
+        data = client->readLine();
+        qDebug() << "request from server";
+        qDebug() << data;
+        parse(data);
+    }
 
 }
 
@@ -172,3 +179,11 @@ void Controller::on_errorRecieved(QAbstractSocket::SocketError err) {
     qDebug() << strError;
 }
 
+void Controller::sendStep(const QPoint &point) {
+    qDebug() << "step sended!";
+    qDebug() << QString("step:") << QString(point.x()+1) << ":" << QString(point.y()+1) << ":";
+    QTextStream os(client.get());
+    os.setAutoDetectUnicode(true);
+    os <<  QString("step:%1:%2").arg(point.x()+1).arg(point.y()+1);
+    client->flush();
+}

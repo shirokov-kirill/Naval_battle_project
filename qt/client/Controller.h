@@ -46,6 +46,7 @@ public:
     void parseWait(const QStringList &args);
     void parseStep(const QStringList &args);
     void parseGiveAuth(const QStringList &args);
+    void sendStep(const QPoint &point);
 
 
 signals:
