@@ -1,3 +1,1 @@
-#include "Interface.h"
-
-Interface::
+#include "../include/Interface.h"

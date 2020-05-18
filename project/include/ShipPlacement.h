@@ -1,6 +1,7 @@
 #ifndef NAVAL_BATTLE_SHIP_PLACEMENT_H
 #define NAVAL_BATTLE_SHIP_PLACEMENT_H
 
+static const int  PL_CNT = 2;
 
 enum class Ships {
     drownen_ship = -420,
@@ -24,6 +25,7 @@ struct ShipPlacement {
     int x, y;
     orientation orient;
     Ships type;
+    ShipPlacement(int x_, int y_, orientation ori, Ships t) : x(x_), y(y_), orient(ori), type(t) {};
 };
 
 #endif

@@ -4,15 +4,24 @@
 #include <cstdlib>
 #include <bitset>
 #include <vector>
+#include <string>
 
 #include "ShipPlacement.h"
 
-static const std::size_t BH = 10, BW = 10;
-static const std::size_t BHA = BH + 2, BWA = BW + 2;
-static const int  PL_CNT = 2;
+// static const std::size_t BH = 10, BW = 10;
+// static const std::size_t BHA = BH + 2, BWA = BW + 2;
+
 
 class Board {
 public:
+    Board();
+    ~Board();
+    Board(const Board& other);
+    Board& operator=(Board& other) noexcept ;
+
+    std::size_t BH, BW;
+    std::size_t BHA, BWA;
+
     bool can_place_ship(ShipPlacement placement);
     bool place_ship(ShipPlacement placement);
 
@@ -24,14 +33,10 @@ public:
 
     bool is_alive() noexcept;
 
-    void set_H_W(std::size_t h, std::size_t w);
-
-    Board();
-    ~Board();
-    Board(const Board& other);
-    Board& operator=(Board& other) noexcept ;
+    void set_tile_status(std::size_t x, std::size_t y, Ships type); // temporary thing dunno how to do it other way for now
 
 private:
+
     std::vector<std::vector<Ships>> board;
     int working_ships;
     std::vector<std::vector<std::bitset<PL_CNT>>> visible;

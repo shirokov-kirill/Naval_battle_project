@@ -32,21 +32,23 @@ bool Board::is_sunk(std::size_t x, std::size_t y) {
     }
 }
 
-Ships Board::get_tile_status(std::size_t x, std::size_t y) { return board[x][y]; }
+Ships Board::get_tile_status(std::size_t x, std::size_t y) { return board.at(x).at(y); }
 
-bool Board::is_visible(std::size_t x, std::size_t y, int player_num) const { return visible[x][y][player_num]; }
+bool Board::is_visible(std::size_t x, std::size_t y, int player_num) const { return visible.at(x).at(y)[player_num]; }
 
 bool Board::is_alive() noexcept {
     return working_ships > 0;
 }
-// useless shit, doesn't work
-/*
-void Board::set_H_W(std::size_t h, std::size_t w) {
-    BH = h + 2;
-    BW = w + 2;
-}
-*/
+
 Board::Board() {
+    //// hardcoded for now
+    BH = 10;
+    BW = 10;
+    //// --------
+
+    BHA = BH + 2;
+    BWA = BW + 2;
+
     board = std::vector<std::vector<Ships >> (BHA, std::vector<Ships > (BWA, Ships::water));
     working_ships = 0;
     visible = std::vector<std::vector<std::bitset<PL_CNT>>> (BHA, std::vector<std::bitset<PL_CNT>> (BWA, 0));
@@ -55,31 +57,40 @@ Board::Board() {
 Board::~Board() {}
 
 Board::Board(const Board& other) {
+    BH = other.BH;
+    BW = other.BW;
+    BWA = other.BWA;
+    BHA = other.BHA;
     board = std::vector<std::vector<Ships >>(BHA, std::vector<Ships >(BWA));
-    for (size_t i = 0; i < BHA; i++) {
-        for (size_t j = 0; i < BWA; j++) {
-            board[i][j] = other.board[i][j];
+    for (std::size_t i = 0; i < BHA; i++) {
+        for (std::size_t j = 0; j < BWA; j++) {
+            board.at(i).at(j) = other.board.at(i).at(j);
         }
     }
     working_ships = other.working_ships;
     visible = std::vector<std::vector<std::bitset<PL_CNT>>>(BHA, std::vector<std::bitset<PL_CNT>>(BWA));
-    for (size_t i = 0; i < BHA; i++) {
-        for (size_t j = 0; i < BWA; j++) {
-            visible[i][j] = other.visible[i][j];
+    for (std::size_t i = 0; i < BHA; i++) {
+        for (std::size_t j = 0; j < BWA; j++) {
+            visible.at(i).at(j) = other.visible.at(i).at(j);
         }
     }
 }
 
 Board& Board::operator=(Board& other) noexcept {
-    for (size_t i = 0; i < BHA; i++) {
-        for (size_t j = 0; i < BWA; j++) {
-            board[i][j] = other.board[i][j];
+    BH = other.BH;
+    BW = other.BW;
+    BWA = other.BWA;
+    BHA = other.BHA;
+    board = std::vector<std::vector<Ships >>(BHA, std::vector<Ships >(BWA));
+    for (std::size_t i = 0; i < BHA; i++) {
+        for (std::size_t j = 0; j < BWA; j++) {
+            board.at(i).at(j) = other.board.at(i).at(j);
         }
     }
     working_ships = other.working_ships;
-    for (size_t i = 0; i < BHA; i++) {
-        for (size_t j = 0; i < BWA; j++) {
-            visible[i][j] = other.visible[i][j];
+    for (std::size_t i = 0; i < BHA; i++) {
+        for (std::size_t j = 0; j < BWA; j++) {
+            visible.at(i).at(j) = other.visible.at(i).at(j);
         }
     }
     return *this;
@@ -89,11 +100,11 @@ bool Board::place_ship(ShipPlacement placement) {
     if (can_place_ship(placement)) {
         if (placement.orient == orientation::horizontal) {
             for (std::size_t i = 0; i < static_cast<std::size_t >(placement.type); i++) {
-                board[placement.x + i][placement.y] = placement.type;
+                board[placement.x][placement.y + i] = placement.type;
             }
         } else if (placement.orient == orientation::vertical) {
             for (std::size_t i = 0; i < static_cast<std::size_t >(placement.type); i++) {
-                board[placement.x][placement.y + i] = placement.type;
+                board[placement.x + i][placement.y] = placement.type;
             }
         }
         return true;
@@ -107,7 +118,7 @@ bool Board::can_place_ship(ShipPlacement placement) {
         if (placement.x + static_cast<std::size_t >(placement.type) < BWA) {
             for (std::size_t i = placement.x - 1; i <= placement.x + 1 + static_cast<std::size_t >(placement.type); i++) {
                 for (std::size_t j = placement.y - 1; j <= std::size_t(placement.y) + 1; j++) {
-                    if (board[i][j] != Ships::water) return false;
+                    if (board.at(i).at(j) != Ships::water) return false;
                 }
             }
             return true;
@@ -116,7 +127,7 @@ bool Board::can_place_ship(ShipPlacement placement) {
         if (std::size_t(placement.y) + static_cast<std::size_t >(placement.type) - 1 < BHA) {
             for (std::size_t i = placement.x - 1; i <= std::size_t(placement.x) + 1; i++) {
                 for (std::size_t j = placement.y - 1; j <= placement.y + static_cast<std::size_t >(placement.type); j++) {
-                    if (board[i][j] != Ships::water) return false;
+                    if (board.at(i).at(j) != Ships::water) return false;
                 }
             }
             return true;
@@ -126,46 +137,50 @@ bool Board::can_place_ship(ShipPlacement placement) {
 }
 
 bool Board::can_shoot(std::size_t x, std::size_t y, int player_num) {
-    if (board[x][y] == Ships::fire) {
+    if (board.at(x).at(y) == Ships::fire) {
         return false;
     }
-    return !visible[x][y].test(player_num);
+    return !visible.at(x).at(y).test(player_num);
 }
 
 void Board::get_shot(std::size_t x, std::size_t y, int player_num) {
-    if (board[x][y] != Ships::water) {
-        board[x][y] = Ships::fire;
+    if (board.at(x).at(y) != Ships::water) {
+        board.at(x).at(y) = Ships::fire;
         if (is_sunk(x, y)){
             working_ships--;
-            if (board[x - 1][y] == Ships::fire || board[x + 1][y] == Ships::fire) {
+            if (board.at(x - 1).at(y) == Ships::fire || board.at(x + 1).at(y) == Ships::fire) {
                 std::size_t left = x + 1, right = x - 1;
-                while (board[left][y] == Ships::fire) left++;
-                while (board[right][y] == Ships::fire) right--;
+                while (board.at(left).at(y) == Ships::fire) left++;
+                while (board.at(right).at(y)
+                == Ships::fire) right--;
                 for (std::size_t i = right; i <= left; i++) {
                     for (std::size_t j = y - 1; j <= y + 1; j++) {
-                        visible[i][j][player_num] = true;
+                        visible.at(i).at(j)[player_num] = true;
                     }
                 }
-            } else if (board[x][y-1] == Ships::fire || board[x][y+1] == Ships::fire) {
+            } else if (board.at(x).at(y - 1) == Ships::fire || board.at(x).at(y + 1) == Ships::fire) {
                 std::size_t down = y - 1, up = y + 1;
-                while (board[x][down] == Ships::fire) down--;
-                while (board[x][up] == Ships::fire) up++;
+                while (board.at(x).at(down) == Ships::fire) down--;
+                while (board.at(x).at(up) == Ships::fire) up++;
                 for (std::size_t i = x - 1; i <= x + 1; i++) {
                     for (std::size_t j = down; j <= up; j++) {
-                        visible[i][j][player_num] = true;
+                        visible.at(i).at(j)[player_num] = true;
                     }
                 }
             } else {
                 for (std::size_t i = x - 1; i <= x + 1; i++) {
                     for (std::size_t j = y - 1; j <= y + 1; j++) {
-                        visible[i][j][player_num] = true;
+                        visible.at(i).at(j)[player_num] = true;
                     }
                 }
             }
         }
-        visible[x][y] = std::bitset<PL_CNT>( 1 << PL_CNT);
+        visible.at(x).at(y) = std::bitset<PL_CNT>( 1 << PL_CNT);
     } else {
-        visible[x][y][player_num] = true;
+        visible.at(x).at(y)[player_num] = true;
     }
 }
 
+void Board::set_tile_status(std::size_t x, std::size_t y, Ships type) {
+    board.at(x).at(y) = type;
+}

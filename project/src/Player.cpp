@@ -3,7 +3,7 @@
 Player::Player() noexcept {
 	this->score = 0;
 	this->name = "";
-	this->cur_ship = 1;
+	this->cur_ship = 0;
 }
 
 void Player::increase_score(int d) noexcept{
@@ -40,6 +40,7 @@ Player& Player::operator=(Player& other)noexcept {
 	score = other.score;
 	combo = other.combo;
 	name = other.name;
+	cur_ship = other.cur_ship;
 	return *this;
 }
 
@@ -52,7 +53,10 @@ Ships Player::get_cell(int x, int y) {
 }
 
 bool Player::place_ship(ShipPlacement placement) {
-    return board.place_ship(placement);
+    bool f = board.place_ship(placement);
+    if(f)
+        inc_ship();
+    return f;
 }
 
 int Player::get_cur_ship() {
@@ -61,4 +65,26 @@ int Player::get_cur_ship() {
 
 void Player::inc_ship() {
 	cur_ship++;
+}
+
+
+std::string Player::convert_to_string() {
+    std::string ret_val = "";
+    for (std::size_t i = 0; i < board.BHA; i++) {
+        for (std::size_t j = 0; j < board.BWA; j++) {
+            ret_val += char(static_cast<int>(board.get_tile_status(i, j)) + '0');
+        }
+    }
+    return ret_val;
+}
+
+void Player::set_board_from_string(std::string src) {
+    for (std::size_t i = 0; i < 12; i++) { // some improvements will be needed
+        for (std::size_t j = 0; j < 12; j++) { // some improvements will be needed
+            board.set_tile_status(i, j, static_cast<Ships >(src[12 * i + j] - '0'));
+        }
+    }
+
+bool Player::is_bot() const noexcept {
+    return false; 
 }
