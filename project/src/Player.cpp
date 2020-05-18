@@ -6,7 +6,7 @@ Player::Player() noexcept {
 	this->cur_ship = 0;
 }
 
-void Player::increase_score(int d) noexcept{
+void Player::increase_score(int d) noexcept {
 	this->score += d;
 }
 
@@ -18,11 +18,11 @@ void Player::set_name(std::string name) {
 	this->name = name;
 }
 
-std::string Player::get_name()noexcept {
+std::string Player::get_name() noexcept {
 	return name;
 }
 
-int Player::get_score()noexcept {
+int Player::get_score() noexcept {
 	return score;
 }
 
@@ -35,7 +35,7 @@ bool Player::can_shoot(int x, int y, int num) {
 }
 
 
-Player& Player::operator=(Player& other)noexcept {
+Player& Player::operator=(Player& other) noexcept {
 	board = other.board;
 	score = other.score;
 	combo = other.combo;
@@ -84,7 +84,7 @@ void Player::set_board_from_string(std::string src) {
             board.set_tile_status(i, j, static_cast<Ships >(src[12 * i + j] - '0'));
         }
     }
-
+}
 bool Player::is_bot() const noexcept {
-    return false; 
+    return false;
 }

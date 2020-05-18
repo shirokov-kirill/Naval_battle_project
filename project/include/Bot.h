@@ -3,15 +3,17 @@
 
 #include"../include/Player.h"
 
+#include <utility>
+
 class Bot : public Player {
 public:
-    Bot() {current_ship_taget = {0, 0};} ;
+    Bot() {current_ship_target = {0, 0};} ;
     virtual ~Bot();
     virtual bool is_bot() const noexcept override;
-    pair<int, int> make_fight_step(Player* other_player);
+    std::pair<int, int> make_fight_step(Player* other_player);
     void make_placement();
 private:
-    pair<int, int> current_ship_taget;
+    std::pair<int, int> current_ship_target;
 };
 
 
