@@ -17,7 +17,7 @@ public:
         Board board; // sorry i had to do it to make it work
 
   Player() noexcept;
-	virtual ~Player();
+    virtual ~Player() = default;
 	Player& operator=(Player&) noexcept ;
 
 	void increase_score(int) noexcept ;

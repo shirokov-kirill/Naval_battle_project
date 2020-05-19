@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect( controller.get(), SIGNAL(stateChanged()), this, SLOT(redraw()) );
     connect( controller.get(), SIGNAL(stateLabelChanged()), this, SLOT(changeStateLabel()) );
     connect( controller.get(), SIGNAL(labelOpponentChanged()), this, SLOT(changeLabelOpponent()));
+    connect(controller.get(), SIGNAL(GameResult(GameResult)), this, SLOT(showGameResult(GameResult)));
 //    connect(this, SIGNAL(sig_connectToServer()), controller, SLOT(sl_connectToServer()));
 //    connect(this, SIGNAL(sig_sendData()), controller, SLOT(sl_sendAuthData()));
 
@@ -76,7 +77,9 @@ QImage MainWindow::getFieldImage( char fld )
             }
             else {
                   cell = Ships::water;
-                  if (controller->enemyPlayer()->is_visible(i1, j1, 0))
+                  if (controller->enemyPlayer()->is_visible(i1, j1, 0) ||
+                          controller->enemyPlayer()->get_cell(i1, j1) == Ships::fire ||
+                          controller->enemyPlayer()->get_cell(i1, j1) == Ships::drownen_ship)
                       cell = controller->enemyPlayer()->get_cell(i1, j1);
             }
 
@@ -134,6 +137,7 @@ void MainWindow::redraw()
 //        ui->actionLeave->setDisabled(false);
 //        ui->menuField->setDisabled(true);
 //    }
+    qDebug() << "updating!";
 
     this->update();
 }
