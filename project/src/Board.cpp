@@ -98,11 +98,11 @@ Board& Board::operator=(Board& other) noexcept {
 
 bool Board::place_ship(ShipPlacement placement) {
     if (can_place_ship(placement)) {
-        if (placement.orient == orientation::horizontal) {
+        if (placement.orient == orientation::vertical) {
             for (std::size_t i = 0; i < static_cast<std::size_t >(placement.type); i++) {
                 board[placement.x][placement.y + i] = placement.type;
             }
-        } else if (placement.orient == orientation::vertical) {
+        } else if (placement.orient == orientation::horizontal) {
             for (std::size_t i = 0; i < static_cast<std::size_t >(placement.type); i++) {
                 board[placement.x + i][placement.y] = placement.type;
             }
@@ -113,20 +113,20 @@ bool Board::place_ship(ShipPlacement placement) {
 }
 
 bool Board::can_place_ship(ShipPlacement placement) {
-    if (std::size_t(placement.x) >= BWA || std::size_t(placement.y) >= BHA) return false;
+//    if (std::size_t(placement.x) > BW || std::size_t(placement.y) > BH) return false;
     if (placement.orient == orientation::horizontal) {
-        if (placement.x + static_cast<std::size_t >(placement.type) < BWA) {
-            for (std::size_t i = placement.x - 1; i <= placement.x + 1 + static_cast<std::size_t >(placement.type); i++) {
-                for (std::size_t j = placement.y - 1; j <= std::size_t(placement.y) + 1; j++) {
+        if (std::size_t(placement.x) + static_cast<std::size_t >(placement.type) - 1 <= BW) {
+            for (std::size_t i = std::size_t(placement.x) - 1; i <= std::size_t(placement.x) + static_cast<std::size_t >(placement.type); i++) {
+                for (std::size_t j = std::size_t(placement.y) - 1; j <= std::size_t(placement.y) + 1; j++) {
                     if (board.at(i).at(j) != Ships::water) return false;
                 }
             }
             return true;
         } else return false;
     } else if (placement.orient == orientation::vertical) {
-        if (std::size_t(placement.y) + static_cast<std::size_t >(placement.type) - 1 < BHA) {
-            for (std::size_t i = placement.x - 1; i <= std::size_t(placement.x) + 1; i++) {
-                for (std::size_t j = placement.y - 1; j <= placement.y + static_cast<std::size_t >(placement.type); j++) {
+        if (std::size_t(placement.y) + static_cast<std::size_t >(placement.type) - 1 <= BH) {
+            for (std::size_t i = std::size_t(placement.x) - 1; i <= std::size_t(placement.x) + 1; i++) {
+                for (std::size_t j = std::size_t(placement.y) - 1; j <= std::size_t(placement.y) + static_cast<std::size_t >(placement.type); j++) {
                     if (board.at(i).at(j) != Ships::water) return false;
                 }
             }
