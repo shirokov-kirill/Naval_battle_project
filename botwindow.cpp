@@ -1,35 +1,38 @@
-#include "mainwindow.h"
-//#include "ui_mainwindow.h"
-#include "ui_mainwindow_2.h"
+#include "botwindow.h"
+#include "ui_botwindow.h"
+#include "project/include/Bot.h"
+
 #include <QPainter>
 #include <QImage>
 
 #include <windows.h>
 
 
-MainWindow::MainWindow(QWidget *parent)
+BotWindow::BotWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-    , controller(std::make_unique<Controller>())
+    , ui(new Ui::BotWindow)
+    , controller(new Controller(true))
 {
     ui->setupUi(this);
-    pictures.load();    
+    pictures.load();
 
-    connect( controller.get(), SIGNAL(stateChanged()), this, SLOT(redraw()) );
-    connect( controller.get(), SIGNAL(stateLabelChanged()), this, SLOT(changeStateLabel()) );
-    connect( controller.get(), SIGNAL(labelOpponentChanged()), this, SLOT(changeLabelOpponent()));
+    connect( controller, SIGNAL(stateChanged()), this, SLOT(redraw()) );
+    connect( controller, SIGNAL(stateLabelChanged()), this, SLOT(changeStateLabel()) );
+    connect( controller, SIGNAL(labelOpponentChanged()), this, SLOT(changeLabelOpponent()));
+    connect( controller, SIGNAL(GameResult(GameResult)), this, SLOT(showGameResult(GameResult)));
 //    connect(this, SIGNAL(sig_connectToServer()), controller, SLOT(sl_connectToServer()));
 //    connect(this, SIGNAL(sig_sendData()), controller, SLOT(sl_sendAuthData()));
 
 }
 
 
-MainWindow::~MainWindow()
+BotWindow::~BotWindow()
 {
+    delete controller;
     delete ui;
 }
 
-void MainWindow::paintEvent( QPaintEvent* event )
+void BotWindow::paintEvent( QPaintEvent* event )
 {
     Q_UNUSED( event );
 
@@ -46,17 +49,17 @@ void MainWindow::paintEvent( QPaintEvent* event )
     painter.drawImage( ENEMYFIELD_X, ENEMYFIELD_Y + deltaY, enemyFieldImage() );
 }
 
-QImage MainWindow::myFieldImage()
+QImage BotWindow::myFieldImage()
 {
     return getFieldImage( 0 );
 }
 
-QImage MainWindow::enemyFieldImage()
+QImage BotWindow::enemyFieldImage()
 {
     return getFieldImage( 1 );
 }
 
-QImage MainWindow::getFieldImage( char fld )
+QImage BotWindow::getFieldImage( char fld )
 {
     QImage image( FIELD_WIDTH, FIELD_HEIGHT, QImage::Format_ARGB32 );
     Ships cell;
@@ -76,7 +79,9 @@ QImage MainWindow::getFieldImage( char fld )
             }
             else {
                   cell = Ships::water;
-                  if (controller->enemyPlayer()->is_visible(i1, j1, 0))
+                  if (controller->enemyPlayer()->is_visible(i1, j1, 0) ||
+                          controller->enemyPlayer()->get_cell(i1, j1) == Ships::fire ||
+                          controller->enemyPlayer()->get_cell(i1, j1) == Ships::drownen_ship)
                       cell = controller->enemyPlayer()->get_cell(i1, j1);
             }
 
@@ -94,7 +99,10 @@ QImage MainWindow::getFieldImage( char fld )
                 if (fld == 0)
                     painter.drawImage( i * cfx, j * cfy, pictures.get("redhalf") );
                 else
-                    painter.drawImage( i * cfx, j * cfy, pictures.get("half") );
+                    painter.drawImage( i * cfx, j * cfy, pictures.get("redhalf") );
+            }
+            else if (cell == Ships::drownen_ship) {
+                    painter.drawImage( i * cfx, j * cfy, pictures.get("redfull") );
             }
             else {
                 painter.drawImage( i * cfx, j * cfy, pictures.get("full") );
@@ -104,20 +112,23 @@ QImage MainWindow::getFieldImage( char fld )
     return image;
 }
 
-void MainWindow::mousePressEvent( QMouseEvent* ev )
+void BotWindow::mousePressEvent( QMouseEvent* ev )
 {
     QPoint pos = ev->pos();
+    orientation ori = orientation::vertical;
+    if (ev->button() == Qt::RightButton) ori = orientation::horizontal;
     pos.setY( pos.y() - this->centralWidget()->y() );
-    controller->onMousePressed( pos );
+    controller->onMousePressed( pos, ori );
+
 }
 
-void MainWindow::closeEvent( QCloseEvent* event )
+void BotWindow::closeEvent( QCloseEvent* event )
 {
 //    controller->onGameQuit();
     event->accept();
 }
 
-void MainWindow::redraw()
+void BotWindow::redraw()
 {
 //    if( controller->getState() == ST_PLACING_SHIPS )
 //        ui->labelOpponent->clear();
@@ -134,13 +145,15 @@ void MainWindow::redraw()
 //        ui->actionLeave->setDisabled(false);
 //        ui->menuField->setDisabled(true);
 //    }
+    qDebug() << "updating!";
 
-    this->update();
+    this->update();;
 }
 
-void MainWindow::showGameResult( GameResult result )
+void BotWindow::showGameResult( GameResult result )
 {
-    if( result == GR_NONE )
+
+/*    if( result == GR_NONE )
         return;
 
     QString messageString = result == GR_WON
@@ -149,14 +162,15 @@ void MainWindow::showGameResult( GameResult result )
 
     this->update();
     QMessageBox::information( this, tr("Game result"), messageString );
+    */
 }
 
-void MainWindow::setStatus( const QString& status )
+void BotWindow::setStatus( const QString& status )
 {
     ui->labelStatus->setText( tr("Status: ") + status );
 }
 
-void MainWindow::changeStateLabel() {
+void BotWindow::changeStateLabel() {
     if (controller->getState() == ST_PLACING_SHIPS)
         setStatus("placing ships");
     if (controller->getState() == ST_WAITING_STEP)
@@ -165,15 +179,15 @@ void MainWindow::changeStateLabel() {
         setStatus("making step");
 }
 
-void MainWindow::setName(QString new_name) {
+void BotWindow::setName(QString new_name) {
     name = new_name;
 }
 
-void MainWindow::changeLabelOpponent() {
+void BotWindow::changeLabelOpponent() {
     ui->labelOpponent->setText(QString::fromStdString(controller->enemyPlayer()->get_name()));
 }
 
-void MainWindow::on_actionStart_triggered() {
+void BotWindow::on_actionStart_triggered() {
     bool ok;
     QString name = QInputDialog::getText(this, tr("Ввод"),
                             tr("Ваше имя:"), QLineEdit::Normal,
@@ -187,4 +201,11 @@ void MainWindow::on_actionStart_triggered() {
 //    controller->sendAuthData(name, "010101010");
 }
 
+
+void BotWindow::on_actionQuit_triggered()
+{
+    this->close();
+    // here shoul be some more logic
+    emit back_menu();
+}
 

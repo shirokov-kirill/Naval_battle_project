@@ -3,10 +3,13 @@
 #include <random>
 #include <vector>
 #include <algorithm>
+#include <time.h>
 
 bool Bot::is_bot() const noexcept {
     return true;
 }
+
+std::mt19937 rnd(time(0));
 
 std::pair<int, int> Bot::make_fight_step(Player *other_player) {
     bool pic_new = false;
@@ -26,8 +29,6 @@ std::pair<int, int> Bot::make_fight_step(Player *other_player) {
     } else if (current_ship_target == std::make_pair(0, 0) || other_player->get_cell(current_ship_target.first, current_ship_target.second) == Ships::water || pic_new) {
         std::pair<int, int> tmp = current_ship_target;
         int i = 0;
-        std::random_device rd;
-        std::mt19937 rnd(rd());
         do {
             current_ship_target.first = (rnd() % 10) + 1;  // 10 must be changed later to custom value
             current_ship_target.second = (rnd() % 10) + 1;
@@ -66,68 +67,66 @@ std::pair<int, int> Bot::make_fight_step(Player *other_player) {
 }
 
 void Bot::make_placement() {
-    std::random_device rd;
-    std::mt19937 rnd(rd());
     int key;
     std::vector<Ships> ships = {Ships::carrier, Ships::regular, Ships::regular, Ships::middle, Ships::middle, Ships::middle, Ships::small, Ships::small, Ships::small, Ships::small};
     std::random_shuffle(ships.begin(), ships.end());
     int next = 0;
-    while (next < 10) {
+    while (next < 9) {
         key = rnd() % 4;
         switch (key) {
             case 0:
                 for (int i = 1; i <= 10; i += 2) {
                     ShipPlacement tmp(i, i, static_cast<orientation>(rnd()%2), ships.at(next));
-                    if (this->board.can_place_ship(tmp)) {
+                    if (this->can_place_ship(tmp)) {
                         next++;
-                        this->board.place_ship(tmp);
-                        if (next == 9) break;
+                        this->place_ship(tmp);
+                        if (next == 10) break;
                     }
                 }
-                for (int i = 9; i > 0; i -= 2) {
+                for (int i = 9; i > 1; i -= 2) {
                     ShipPlacement tmp(i, i, static_cast<orientation>(rnd()%2), ships.at(next));
-                    if (this->board.can_place_ship(tmp)) {
+                    if (this->can_place_ship(tmp)) {
                         next++;
-                        this->board.place_ship(tmp);
-                        if (next == 9) break;
+                        this->place_ship(tmp);
+                        if (next == 10) break;
                     }
                 }
                 break;
             case 1:
                 for (int i = 2; i <= 10; i += 2) {
                     ShipPlacement tmp(i, i, static_cast<orientation>(rnd()%2), ships.at(next));
-                    if (this->board.can_place_ship(tmp)) {
+                    if (this->can_place_ship(tmp)) {
                         next++;
-                        this->board.place_ship(tmp);
-                        if (next == 9) break;
+                        this->place_ship(tmp);
+                        if (next == 10) break;
                     }
                 }
-                for (int i = 10; i > 0; i -= 2) {
+                for (int i = 10; i > 1; i -= 2) {
                     ShipPlacement tmp(i, i, static_cast<orientation>(rnd()%2), ships.at(next));
-                    if (this->board.can_place_ship(tmp)) {
+                    if (this->can_place_ship(tmp)) {
                         next++;
-                        this->board.place_ship(tmp);
-                        if (next == 9) break;
+                        this->place_ship(tmp);
+                        if (next == 10) break;
                     }
                 }
                 break;
             case 2:
                 for (int i = 1; i <= 10; i += 2) {
-                    ShipPlacement tmp(i, 5 + (rnd()%10 - 5), static_cast<orientation>(rnd()%2), ships.at(next));
-                    if (this->board.can_place_ship(tmp)) {
+                    ShipPlacement tmp(i, 5 + (rnd()%10 - 4), static_cast<orientation>(rnd()%2), ships.at(next));
+                    if (this->can_place_ship(tmp)) {
                         next++;
-                        this->board.place_ship(tmp);
-                        if (next == 9) break;
+                        this->place_ship(tmp);
+                        if (next == 10) break;
                     }
                 }
                 break;
             case 3:
                 for (int i = 1; i <= 10; i += 2) {
-                    ShipPlacement tmp(5 + (rnd()%10 - 5), i, static_cast<orientation>(rnd()%2), ships.at(next));
-                    if (this->board.can_place_ship(tmp)) {
+                    ShipPlacement tmp(5 + (rnd()%10 - 4), i, static_cast<orientation>(rnd()%2), ships.at(next));
+                    if (this->can_place_ship(tmp)) {
                         next++;
-                        this->board.place_ship(tmp);
-                        if (next == 9) break;
+                        this->place_ship(tmp);
+                        if (next == 10) break;
                     }
                 }
                 break;

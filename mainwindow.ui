@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>SeaCraft</string>
+   <string>Naval Fight</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QLabel" name="labelStatus">
@@ -84,7 +84,7 @@
      <x>0</x>
      <y>0</y>
      <width>555</width>
-     <height>30</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

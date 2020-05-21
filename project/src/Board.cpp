@@ -7,6 +7,7 @@ bool Board::is_sunk(std::size_t x, std::size_t y) {
             board[x + 1][y] == Ships::water &&
             board[x][y - 1] == Ships::water &&
             board[x][y + 1] == Ships::water) {
+            board[x][y] = Ships::drownen_ship;
             return true;
         } else if (board[x - 1][y] != Ships::water || board[x + 1][y] != Ships::water) {
             std::size_t i = 0;
@@ -14,7 +15,16 @@ bool Board::is_sunk(std::size_t x, std::size_t y) {
             if (board[x - i][y] == Ships::water) {
                 std::size_t j = 0;
                 while (board[x + j][y] == Ships::fire) j++;
-                return board[x + j][y] == Ships::water;
+                if (board[x + j][y] == Ships::water) {
+                    j--;
+                    while (board[x + j][y] == Ships::fire) {
+                        board[x + j][y] = Ships::drownen_ship;
+                        j--;
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
@@ -24,7 +34,16 @@ bool Board::is_sunk(std::size_t x, std::size_t y) {
             if (board[x][y - i] == Ships::water) {
                 std::size_t j = 0;
                 while (board[x][y + j] == Ships::fire) j++;
-                return board[x][y + j] == Ships::water;
+                if(board[x][y + j] == Ships::water) {
+                    j--;
+                    while (board[x][y + j] == Ships::fire) {
+                        board[x][y + j] = Ships::drownen_ship;
+                        j--;
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
     } else {
@@ -107,6 +126,7 @@ bool Board::place_ship(ShipPlacement placement) {
                 board[placement.x + i][placement.y] = placement.type;
             }
         }
+        working_ships++;
         return true;
     }
     return false;
@@ -144,24 +164,24 @@ bool Board::can_shoot(std::size_t x, std::size_t y, int player_num) {
 }
 
 void Board::get_shot(std::size_t x, std::size_t y, int player_num) {
-    if (board.at(x).at(y) != Ships::water) {
+    visible.at(x).at(y)[player_num] = true;  // needed for now when 2 players only
+    if (board.at(x).at(y) != Ships::water && board.at(x).at(y) != Ships::drownen_ship) {
         board.at(x).at(y) = Ships::fire;
         if (is_sunk(x, y)){
             working_ships--;
-            if (board.at(x - 1).at(y) == Ships::fire || board.at(x + 1).at(y) == Ships::fire) {
+            if (board.at(x - 1).at(y) == Ships::drownen_ship || board.at(x + 1).at(y) == Ships::drownen_ship) {
                 std::size_t left = x + 1, right = x - 1;
-                while (board.at(left).at(y) == Ships::fire) left++;
-                while (board.at(right).at(y)
-                == Ships::fire) right--;
+                while (board.at(left).at(y) == Ships::drownen_ship) left++;
+                while (board.at(right).at(y) == Ships::drownen_ship) right--;
                 for (std::size_t i = right; i <= left; i++) {
                     for (std::size_t j = y - 1; j <= y + 1; j++) {
                         visible.at(i).at(j)[player_num] = true;
                     }
                 }
-            } else if (board.at(x).at(y - 1) == Ships::fire || board.at(x).at(y + 1) == Ships::fire) {
+            } else if (board.at(x).at(y - 1) == Ships::drownen_ship || board.at(x).at(y + 1) == Ships::drownen_ship) {
                 std::size_t down = y - 1, up = y + 1;
-                while (board.at(x).at(down) == Ships::fire) down--;
-                while (board.at(x).at(up) == Ships::fire) up++;
+                while (board.at(x).at(down) == Ships::drownen_ship) down--;
+                while (board.at(x).at(up) == Ships::drownen_ship) up++;
                 for (std::size_t i = x - 1; i <= x + 1; i++) {
                     for (std::size_t j = down; j <= up; j++) {
                         visible.at(i).at(j)[player_num] = true;
@@ -175,10 +195,9 @@ void Board::get_shot(std::size_t x, std::size_t y, int player_num) {
                 }
             }
         }
-        visible.at(x).at(y) = std::bitset<PL_CNT>( 1 << PL_CNT);
-    } else {
         visible.at(x).at(y)[player_num] = true;
     }
+//    visible.at(x).at(y) = std::bitset<PL_CNT>( 1 << PL_CNT);
 }
 
 void Board::set_tile_status(std::size_t x, std::size_t y, Ships type) {

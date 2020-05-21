@@ -5,7 +5,9 @@
 #include <QPushButton>
 #include <QMouseEvent>
 #include <QInputDialog>
-#include "../../project/include/Player.h"
+#include <memory>
+
+#include "project/include/Player.h"
 #include "Images.h"
 #include "Controller.h"
 
@@ -40,10 +42,12 @@ private slots:
     void changeStateLabel();
     void on_actionStart_triggered();
     void changeLabelOpponent();
+    void on_actionQuit_triggered();
 
 signals:
     void sig_connectToServer();
     void sig_sendAuthData(QString name, QString Field);
+    void menu();
 
 private:
     QImage myFieldImage();
@@ -53,7 +57,6 @@ private:
 
 private:
     Ui::MainWindow *ui;
-//    Controller *controller;
     std::unique_ptr<Controller> controller;
     QString name;
 };

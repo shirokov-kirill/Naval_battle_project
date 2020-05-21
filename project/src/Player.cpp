@@ -54,9 +54,12 @@ Ships Player::get_cell(int x, int y) {
 
 bool Player::place_ship(ShipPlacement placement) {
     bool f = board.place_ship(placement);
-    if(f)
-        inc_ship();
+    if (f) inc_ship();
     return f;
+}
+
+bool Player::can_place_ship(ShipPlacement placement) {
+    return board.can_place_ship(placement);
 }
 
 int Player::get_cur_ship() {
@@ -85,6 +88,7 @@ void Player::set_board_from_string(std::string src) {
         }
     }
 }
+
 bool Player::is_bot() const noexcept {
     return false;
 }

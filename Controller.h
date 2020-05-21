@@ -11,8 +11,11 @@
 #include <QtNetwork>
 #include <QTcpSocket>
 
-#include "../../project/include/Player.h"
+#include <memory>
+
+#include "project/include/Player.h"
 #include "Utility.h"
+#include "finalwindow.h"
 
 enum GameResult
 {
@@ -34,7 +37,8 @@ class Controller: public QWidget
 public:
     Controller();
 //    ~Controller();
-    void onMousePressed( const QPoint& pos );
+    Controller(bool need_bot);
+    void onMousePressed( const QPoint& pos, orientation ori );
     Player* myPlayer();
     Player* enemyPlayer();
     State getState();
@@ -68,11 +72,12 @@ private slots:
 private:
     std::unique_ptr<Player> my_player;
     std::unique_ptr<Player> enemy_player;
-
+//    FinalWindow* finwin;
     State state;
     std::unique_ptr<QTcpSocket> client;
     QQueue <QString> cmds;
     int ships_number;
+
 };
 
 #endif // CONTROLLER_H
