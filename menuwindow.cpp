@@ -26,14 +26,37 @@ MenuWindow::MenuWindow(QWidget *parent)
 MenuWindow::~MenuWindow()
 {
     delete ui;
+    delete server;
 }
 
 void MenuWindow::on_startGameButton_clicked()
 {
-    game = new MainWindow();
-    connect(game, &MainWindow::menu, this, &MenuWindow::show);
-    game->show();
-    this->close();
+    int ret = QMessageBox::warning(this, tr("Choice"),
+                                   tr("To start new server press Ok.\n"
+                                      "To connect to existing press Discard"),
+                                   QMessageBox::Ok | QMessageBox::Discard
+                                   | QMessageBox::Cancel,
+                                   QMessageBox::Ok);
+    switch (ret) {
+        case QMessageBox::Ok:
+        {
+            server = new Server();
+            server->start();
+            game = new MainWindow();
+            connect(game, &MainWindow::menu, this, &MenuWindow::show);
+            game->show();
+            this->close();
+        }
+        case QMessageBox::Cancel:
+            return;
+        case QMessageBox::Discard:
+        {
+            game = new MainWindow();
+            connect(game, &MainWindow::menu, this, &MenuWindow::show);
+            game->show();
+            this->close();
+        }
+    }
 }
 
 void MenuWindow::on_startBotButton_clicked()

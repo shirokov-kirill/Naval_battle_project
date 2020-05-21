@@ -59,6 +59,7 @@ private:
 
 private:
     Ui::BotWindow *ui;
+    FinalWindow* finwin;
     Controller* controller;
     QString name;
 };

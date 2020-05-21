@@ -21,15 +21,18 @@ SOURCES += \
     Images.cpp \
     Utility.cpp \
     botwindow.cpp \
+    client.cpp \
     finalwindow.cpp \
     main.cpp \
     mainwindow.cpp \
     menuwindow.cpp \
+    server.cpp \
     project/src/Board.cpp \
     project/src/Bot.cpp \
     project/src/Player.cpp
 
 HEADERS += \
+    Client.h \
     Controller.h \
     Defines.h \
     Images.h \
@@ -38,6 +41,7 @@ HEADERS += \
     finalwindow.h \
     mainwindow.h \
     menuwindow.h \
+    Server.h \
     project/include/Board.h \
     project/include/Player.h \
     project/include/Bot.h \

@@ -142,7 +142,7 @@ void MainWindow::redraw()
 
 void MainWindow::showGameResult( GameResult result )
 {
-/*    if( result == GR_NONE )
+    if( result == GR_NONE )
         return;
 
     QString messageString = result == GR_WON
@@ -151,7 +151,6 @@ void MainWindow::showGameResult( GameResult result )
 
     this->update();
     QMessageBox::information( this, tr("Game result"), messageString );
-    */
 }
 
 void MainWindow::setStatus( const QString& status )

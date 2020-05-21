@@ -78,13 +78,8 @@ void Controller::onMousePressed( const QPoint& pos, orientation ori ) {
         else setState(State::ST_WAITING_STEP);
 
         if (!enemyPlayer()->is_alive()) {
-/*            finwin = new FinalWindow;
-            finwin->result = 1;
-            finwin->show();
-            this->close();
-
             qDebug() << "game ended";
-            */
+            emit gameResult(GR_WON);
             return;
         }
 
@@ -100,11 +95,7 @@ void Controller::onMousePressed( const QPoint& pos, orientation ori ) {
                 qDebug() << "i got shot to: " << bot_step.first << ' ' <<  bot_step.second;
                 qDebug() << "cell state now: " << (int)(myPlayer()->get_cell(bot_step.first,  bot_step.second));
                 if (!myPlayer()->is_alive()) {
-  /*                  finwin = new FinalWindow;
-                    finwin->result = -1;
-                    finwin->show();
-                    this->close();
-*/
+                    emit gameResult(GR_LOST);
                     qDebug() << "game ended";
                     return;
                 }

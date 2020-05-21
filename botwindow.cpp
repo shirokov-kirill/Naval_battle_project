@@ -130,39 +130,45 @@ void BotWindow::closeEvent( QCloseEvent* event )
 
 void BotWindow::redraw()
 {
-//    if( controller->getState() == ST_PLACING_SHIPS )
-//        ui->labelOpponent->clear();
+    if( controller->getState() == ST_PLACING_SHIPS )
+        ui->labelOpponent->clear();
 
-//    if( controller->getState() == ST_PLACING_SHIPS )
-//    {
-//        ui->actionStart->setDisabled(false);
-//        ui->actionLeave->setDisabled(true);
-//        ui->menuField->setDisabled(false);
-//    }
-//    else
-//    {
-//        ui->actionStart->setDisabled(true);
-//        ui->actionLeave->setDisabled(false);
-//        ui->menuField->setDisabled(true);
-//    }
+    if( controller->getState() == ST_PLACING_SHIPS )
+    {
+        ui->actionStart->setDisabled(false);
+        ui->actionLeave->setDisabled(true);
+        ui->menuField->setDisabled(false);
+    }
+    else
+    {
+        ui->actionStart->setDisabled(true);
+        ui->actionLeave->setDisabled(false);
+        ui->menuField->setDisabled(true);
+    }
     qDebug() << "updating!";
 
-    this->update();;
+    this->update();
 }
 
 void BotWindow::showGameResult( GameResult result )
 {
-
-/*    if( result == GR_NONE )
-        return;
-
+    /*
+    int res = result == GR_WON ? 1 : 0;
+    finwin = new FinalWindow;
+    finwin->result = res;
+    finwin->show();
+    this->close();
+    qDebug() << "ending!";
+*/
+    if( result == GR_NONE ) return;
+    qDebug() << "ending!";
     QString messageString = result == GR_WON
         ? tr( "You win!" )
         : tr( "You lose!" );
 
     this->update();
     QMessageBox::information( this, tr("Game result"), messageString );
-    */
+
 }
 
 void BotWindow::setStatus( const QString& status )

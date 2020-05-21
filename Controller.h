@@ -15,7 +15,6 @@
 
 #include "project/include/Player.h"
 #include "Utility.h"
-#include "finalwindow.h"
 
 enum GameResult
 {
@@ -72,7 +71,6 @@ private slots:
 private:
     std::unique_ptr<Player> my_player;
     std::unique_ptr<Player> enemy_player;
-//    FinalWindow* finwin;
     State state;
     std::unique_ptr<QTcpSocket> client;
     QQueue <QString> cmds;
