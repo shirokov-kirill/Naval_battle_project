@@ -75,7 +75,7 @@ TEST_SUITE("testing Board class"){
             CHECK_EQ(board1.is_alive(), true);
             board1.get_shot(5,6,1);
             CHECK_EQ(board1.is_alive(), false);
-            CHECK_EQ(board1.get_tile_status(5,6), Ships::fire);
+            CHECK_EQ(board1.get_tile_status(5,6), Ships::drownen_ship);
             CHECK_EQ(board1.can_shoot(5,6,1), false);
             CHECK_EQ(board1.can_shoot(5,7,1), false);
             CHECK_EQ(board1.can_shoot(5,5,1), false);
@@ -103,7 +103,7 @@ TEST_SUITE("testing Board class"){
             CHECK_EQ(board1.can_shoot(6,7,1), true);
             CHECK_EQ(board1.can_shoot(6,5,1), true);
             CHECK_EQ(board1.can_shoot(4,7,1), true);
-            board1.get_shot(6,6,1);
+            board1.get_shot(5,7,1);
             CHECK_EQ(board1.is_alive(), false);
             CHECK_EQ(board1.can_shoot(5,6,1), false);
             CHECK_EQ(board1.can_shoot(5,7,1), false);
@@ -114,9 +114,9 @@ TEST_SUITE("testing Board class"){
             CHECK_EQ(board1.can_shoot(6,7,1), false);
             CHECK_EQ(board1.can_shoot(6,5,1), false);
             CHECK_EQ(board1.can_shoot(4,7,1), false);
-            CHECK_EQ(board1.can_shoot(7,6,1), false);
-            CHECK_EQ(board1.can_shoot(7,5,1), false);
-            CHECK_EQ(board1.can_shoot(7,7,1), false);
+            CHECK_EQ(board1.can_shoot(4,8,1), false);
+            CHECK_EQ(board1.can_shoot(5,8,1), false);
+            CHECK_EQ(board1.can_shoot(6,8,1), false);
         }
         SUBCASE("other horizontal"){
             Board board1;
@@ -135,21 +135,21 @@ TEST_SUITE("testing Board class"){
             CHECK_EQ(board1.can_shoot(6,7,1), true);
             CHECK_EQ(board1.can_shoot(6,5,1), true);
             CHECK_EQ(board1.can_shoot(4,7,1), true);
-            board1.get_shot(5,7,1);
+            board1.get_shot(6,6,1);
             CHECK_EQ(board1.is_alive(), false);
-            CHECK_EQ(board1.get_tile_status(5,7), Ships::fire);
+            CHECK_EQ(board1.get_tile_status(6,6), Ships::drownen_ship);
             CHECK_EQ(board1.can_shoot(5,7,1), false);
             CHECK_EQ(board1.can_shoot(6,7,1), false);
             CHECK_EQ(board1.can_shoot(4,7,1), false);
             CHECK_EQ(board1.can_shoot(5,6,1), false);
-            CHECK_EQ(board1.can_shoot(5,8,1), false);
-            CHECK_EQ(board1.can_shoot(4,6,1), false);
-            CHECK_EQ(board1.can_shoot(4,8,1), false);
-            CHECK_EQ(board1.can_shoot(6,6,1), false);
-            CHECK_EQ(board1.can_shoot(6,8,1), false);
             CHECK_EQ(board1.can_shoot(5,5,1), false);
+            CHECK_EQ(board1.can_shoot(4,6,1), false);
             CHECK_EQ(board1.can_shoot(4,5,1), false);
+            CHECK_EQ(board1.can_shoot(6,6,1), false);
             CHECK_EQ(board1.can_shoot(6,5,1), false);
+            CHECK_EQ(board1.can_shoot(7,5,1), false);
+            CHECK_EQ(board1.can_shoot(7,6,1), false);
+            CHECK_EQ(board1.can_shoot(7,7,1), false);
         }
     }
     TEST_CASE("testing is_visible() method"){
@@ -163,7 +163,7 @@ TEST_SUITE("testing Board class"){
         ShipPlacement sp(5, 6, orientation::horizontal, Ships::middle);
         board1.place_ship(sp);
         CHECK_EQ(board1.get_tile_status(5,6), Ships::middle);
-        CHECK_EQ(board1.get_tile_status(5,7), Ships::middle);
+        CHECK_EQ(board1.get_tile_status(6,6), Ships::middle);
         CHECK_EQ(board1.get_tile_status(6,8), Ships::water);
     }
     TEST_CASE("testing can_place_ship() method"){
@@ -179,8 +179,11 @@ TEST_SUITE("testing Board class"){
         CHECK_EQ(board1.can_place_ship(sp), false);
         sp.x = 4;
         CHECK_EQ(board1.can_place_ship(sp), false);
-        sp.y = 8;
+        sp.y = 7;
         CHECK_EQ(board1.can_place_ship(sp), false);
+        sp.y = 8;
+        CHECK_EQ(board1.can_place_ship(sp), true);
+        sp.y = 7;
         sp.x = 6;
         CHECK_EQ(board1.can_place_ship(sp), false);
         sp.x = 10;
@@ -195,8 +198,8 @@ TEST_SUITE("testing Board class"){
         Board board1;
         ShipPlacement sp(1, 6, orientation::horizontal, Ships::middle);
         board1.place_ship(sp);
-        CHECK_EQ(board1.get_tile_status(1,1), Ships::middle);
-        CHECK_EQ(board1.get_tile_status(1,2), Ships::middle);
+        CHECK_EQ(board1.get_tile_status(1,6), Ships::middle);
+        CHECK_EQ(board1.get_tile_status(2,6), Ships::middle);
         sp.x = 10;
         sp.y = 10;
         sp.orient = orientation::vertical;

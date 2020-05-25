@@ -32,8 +32,7 @@ TEST_SUITE("testing Player class"){
     TEST_CASE("testing place_ship()"){
         SUBCASE("horizontal"){
             Player player1;
-            ShipPlacement sp;
-            sp.x = 4, sp.y = 2, sp.orient = orientation::horizontal, sp.type = Ships::middle;
+            ShipPlacement sp(4, 2, orientation::horizontal, Ships::middle);
             player1.place_ship(sp);
             CHECK_EQ(player1.is_alive(), true);
             CHECK_EQ(player1.get_cur_ship(), 1);
@@ -44,8 +43,7 @@ TEST_SUITE("testing Player class"){
         }
         SUBCASE("vertical"){
             Player player1;
-            ShipPlacement sp;
-            sp.x = 4, sp.y = 2, sp.orient = orientation::vertical, sp.type = Ships::middle;
+            ShipPlacement sp(4, 2, orientation::vertical, Ships::middle);
             player1.place_ship(sp);
             CHECK_EQ(player1.is_alive(), true);
             CHECK_EQ(player1.get_cur_ship(), 1);
@@ -58,16 +56,14 @@ TEST_SUITE("testing Player class"){
     TEST_CASE("testing is_alive() method"){
         SUBCASE("alive"){
             Player player1;
-            ShipPlacement sp;
-            sp.x = 4, sp.y = 2, sp.orient = orientation::vertical, sp.type = Ships::middle;
+            ShipPlacement sp(4, 2, orientation::vertical, Ships::middle);
             player1.place_ship(sp);
             CHECK_EQ(player1.is_alive(), true);
             CHECK_EQ(player1.get_cur_ship(), 1);
         }
         SUBCASE("not alive"){
             Player player1;
-            ShipPlacement sp;
-            sp.x = 4, sp.y = 2, sp.orient = orientation::vertical, sp.type = Ships::small;
+            ShipPlacement sp(4, 2, orientation::vertical, Ships::small);
             player1.get_shot(4, 2, 1);
             CHECK_EQ(player1.is_alive(), false);
             CHECK_EQ(player1.get_cur_ship(), 0);
@@ -81,8 +77,7 @@ TEST_SUITE("testing Player class"){
     }
     TEST_CASE("testing operator = method"){
         Player player1;
-        ShipPlacement sp;
-        sp.x = 4, sp.y = 2, sp.orient = orientation::vertical, sp.type = Ships::small;
+        ShipPlacement sp(4, 2, orientation::vertical, Ships::small);
         Player player2;
         player2.increase_score(345);
         player2.set_name("flgkflgkdf3;");
