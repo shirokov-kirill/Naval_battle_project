@@ -112,16 +112,14 @@ QImage BotWindow::getFieldImage( char fld )
     return image;
 }
 
-void BotWindow::mousePressEvent( QMouseEvent* ev )
-{
+void BotWindow::mousePressEvent( QMouseEvent* ev ) {
     QPoint pos = ev->pos();
     orientation ori = orientation::vertical;
     if (ev->button() == Qt::RightButton) ori = orientation::horizontal;
     pos.setY( pos.y() - this->centralWidget()->y() );
     int res = controller->onMousePressed( pos, ori );
     if (res != 0) {
-        finwin = new FinalWindow;
-        finwin->result = res;
+        finwin = new FinalWindow(res);
         finwin->show();
         this->close();
     }

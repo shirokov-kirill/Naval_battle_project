@@ -13,7 +13,7 @@ class FinalWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit FinalWindow(QWidget *parent = nullptr);
+    explicit FinalWindow(int res, QWidget *parent = nullptr);
     ~FinalWindow();
     int result;
 
