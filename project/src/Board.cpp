@@ -133,7 +133,7 @@ bool Board::place_ship(ShipPlacement placement) {
 }
 
 bool Board::can_place_ship(ShipPlacement placement) {
-//    if (std::size_t(placement.x) > BW || std::size_t(placement.y) > BH) return false;
+    if (std::size_t(placement.x) == 0 || std::size_t(placement.y) == 0) return false;
     if (placement.orient == orientation::horizontal) {
         if (std::size_t(placement.x) + static_cast<std::size_t >(placement.type) - 1 <= BW) {
             for (std::size_t i = std::size_t(placement.x) - 1; i <= std::size_t(placement.x) + static_cast<std::size_t >(placement.type); i++) {
@@ -160,7 +160,7 @@ bool Board::can_shoot(std::size_t x, std::size_t y, int player_num) {
     if (board.at(x).at(y) == Ships::fire) {
         return false;
     }
-    return !visible.at(x).at(y).test(player_num);
+    return (!visible.at(x).at(y).test(player_num) && (x > 0 && y > 0));
 }
 
 void Board::get_shot(std::size_t x, std::size_t y, int player_num) {

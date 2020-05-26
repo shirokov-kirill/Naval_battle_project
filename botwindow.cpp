@@ -118,8 +118,13 @@ void BotWindow::mousePressEvent( QMouseEvent* ev )
     orientation ori = orientation::vertical;
     if (ev->button() == Qt::RightButton) ori = orientation::horizontal;
     pos.setY( pos.y() - this->centralWidget()->y() );
-    controller->onMousePressed( pos, ori );
-
+    int res = controller->onMousePressed( pos, ori );
+    if (res != 0) {
+        finwin = new FinalWindow;
+        finwin->result = res;
+        finwin->show();
+        this->close();
+    }
 }
 
 void BotWindow::closeEvent( QCloseEvent* event )

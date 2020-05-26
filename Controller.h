@@ -37,7 +37,7 @@ public:
     Controller();
 //    ~Controller();
     Controller(bool need_bot);
-    void onMousePressed( const QPoint& pos, orientation ori );
+    int onMousePressed( const QPoint& pos, orientation ori );
     Player* myPlayer();
     Player* enemyPlayer();
     State getState();

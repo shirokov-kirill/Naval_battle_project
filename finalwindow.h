@@ -17,6 +17,9 @@ public:
     ~FinalWindow();
     int result;
 
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::FinalWindow *ui;
 };

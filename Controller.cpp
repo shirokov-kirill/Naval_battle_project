@@ -26,11 +26,11 @@ Controller::Controller(bool need_bot)
     connect(client.get(), SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(on_errorRecieved(QAbstractSocket::SocketError)));
 }
 
-void Controller::onMousePressed( const QPoint& pos, orientation ori ) {
+int Controller::onMousePressed( const QPoint& pos, orientation ori ) {
     if(getState() == State::ST_PLACING_SHIPS) {
         QPoint point = getMyFieldCoord(pos);
 
-        if( point.x() == -1 || point.y() == -1 ) return;
+        if( point.x() == -1 || point.y() == -1 ) return 0;
 
         qDebug() << "Ship at" << point.x() + 1 << point.y() + 1;
 
@@ -50,18 +50,18 @@ void Controller::onMousePressed( const QPoint& pos, orientation ori ) {
                 setState(ST_MAKING_STEP);
             }
         } else emit stateChanged();
-        return;
+        return 0;
     }
 
     if (getState() == ST_MAKING_STEP) {
         QPoint point = getEnemyFieldCoord(pos);
 
-        if( point.x() == -1 || point.y() == -1 ) return;
+        if( point.x() == -1 || point.y() == -1 ) return 0;
 
         qDebug() << "Going to" << point.x() + 1 << point.y() + 1;
 
         bool marked = enemyPlayer()->is_visible( point.x()+1, point.y()+1,  0);
-        if( marked ) return;
+        if( marked ) return 0;
 
         QString cmd;
         cmd = QString( "step:%1:%2:" ).arg( point.x() + 1 ).arg( point.y() + 1 );
@@ -78,9 +78,9 @@ void Controller::onMousePressed( const QPoint& pos, orientation ori ) {
         else setState(State::ST_WAITING_STEP);
 
         if (!enemyPlayer()->is_alive()) {
-            qDebug() << "game ended";
+            qDebug() << "you won";
             emit gameResult(GR_WON);
-            return;
+            return 1;
         }
 
         if (state == State::ST_WAITING_STEP && enemyPlayer()->is_bot()) {
@@ -95,15 +95,16 @@ void Controller::onMousePressed( const QPoint& pos, orientation ori ) {
                 qDebug() << "i got shot to: " << bot_step.first << ' ' <<  bot_step.second;
                 qDebug() << "cell state now: " << (int)(myPlayer()->get_cell(bot_step.first,  bot_step.second));
                 if (!myPlayer()->is_alive()) {
-                    emit gameResult(GR_LOST);
-                    qDebug() << "game ended";
-                    return;
+//                    emit gameResult(GR_LOST);
+                    qDebug() << "you lose";
+                    return -1;
                 }
             }
             setState(ST_MAKING_STEP);
         }
-        return;
+        return 0;
     }
+    return 0;
 }
 
 State Controller::getState() {

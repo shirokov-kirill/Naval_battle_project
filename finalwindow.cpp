@@ -6,22 +6,22 @@ FinalWindow::FinalWindow(QWidget *parent) :
     ui(new Ui::FinalWindow)
 {
     ui->setupUi(this);
+
+    QPixmap bkgnd;
     if (result == 1) {
-        QPixmap bkgnd(":/img/images/won.png");
-        bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
-        QPalette palette;
-        palette.setBrush(QPalette::Background, bkgnd);
-        this->setPalette(palette);
-    } else {
-        QPixmap bkgnd(":/img/images/lose.png");
-        bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
-        QPalette palette;
-        palette.setBrush(QPalette::Background, bkgnd);
-        this->setPalette(palette);
+        bkgnd = QPixmap(":/img/images/lose.png");
+    } else  {
+        bkgnd = QPixmap(":/img/images/win.png");
     }
+    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Background, bkgnd);
+    this->setPalette(palette);
 }
 
-FinalWindow::~FinalWindow()
-{
-    delete ui;
+void FinalWindow::on_pushButton_clicked() {
+    this->close();
+    exit(0);
 }
+
+FinalWindow::~FinalWindow() { delete ui;}

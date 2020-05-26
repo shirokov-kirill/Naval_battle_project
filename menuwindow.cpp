@@ -23,14 +23,12 @@ MenuWindow::MenuWindow(QWidget *parent)
 
 }
 
-MenuWindow::~MenuWindow()
-{
+MenuWindow::~MenuWindow() {
     delete ui;
     delete server;
 }
 
-void MenuWindow::on_startGameButton_clicked()
-{
+void MenuWindow::on_startGameButton_clicked() {
     int ret = QMessageBox::warning(this, tr("Choice"),
                                    tr("To start new server press Ok.\n"
                                       "To connect to existing press Discard"),
@@ -59,15 +57,14 @@ void MenuWindow::on_startGameButton_clicked()
     }
 }
 
-void MenuWindow::on_startBotButton_clicked()
-{
+void MenuWindow::on_startBotButton_clicked() {
     pve_game = new BotWindow();
     connect(pve_game, &BotWindow::back_menu, this, &MenuWindow::show);
     pve_game->show();
     this->close();
 }
 
-void MenuWindow::on_exitButton_clicked()
-{
+void MenuWindow::on_exitButton_clicked() {
     this->close();
+    exit(0);
 }
