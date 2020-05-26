@@ -160,7 +160,7 @@ bool Board::can_shoot(std::size_t x, std::size_t y, int player_num) {
     if (board.at(x).at(y) == Ships::fire) {
         return false;
     }
-    return (!visible.at(x).at(y).test(player_num) && (x > 0 && y > 0));
+    return (!visible.at(x).at(y).test(player_num) && (x > 0 && y > 0 && x < 11 && y < 11));
 }
 
 void Board::get_shot(std::size_t x, std::size_t y, int player_num) {
