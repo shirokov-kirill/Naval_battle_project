@@ -10,6 +10,7 @@
 #include "project/include/Player.h"
 #include "Images.h"
 #include "Controller.h"
+#include "finalwindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -57,7 +58,8 @@ private:
 
 private:
     Ui::MainWindow *ui;
-    std::unique_ptr<Controller> controller;
+    FinalWindow* finwin;
+    Controller* controller;
     QString name;
 };
 
