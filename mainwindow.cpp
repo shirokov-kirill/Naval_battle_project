@@ -1,6 +1,5 @@
 #include "mainwindow.h"
-//#include "ui_mainwindow.h"
-#include "ui_mainwindow_2.h"
+#include "ui_mainwindow.h"
 #include <QPainter>
 #include <QImage>
 
@@ -13,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     , controller(std::make_unique<Controller>())
 {
     ui->setupUi(this);
-    pictures.load();    
+    pictures.load();
 
     connect( controller.get(), SIGNAL(stateChanged()), this, SLOT(redraw()) );
     connect( controller.get(), SIGNAL(stateLabelChanged()), this, SLOT(changeStateLabel()) );
@@ -107,8 +106,11 @@ QImage MainWindow::getFieldImage( char fld )
 void MainWindow::mousePressEvent( QMouseEvent* ev )
 {
     QPoint pos = ev->pos();
+    orientation ori = orientation::vertical;
+    if (ev->button() == Qt::RightButton) ori = orientation::horizontal;
     pos.setY( pos.y() - this->centralWidget()->y() );
-    controller->onMousePressed( pos );
+    controller->onMousePressed( pos, ori );
+    redraw();
 }
 
 void MainWindow::closeEvent( QCloseEvent* event )
@@ -119,21 +121,21 @@ void MainWindow::closeEvent( QCloseEvent* event )
 
 void MainWindow::redraw()
 {
-//    if( controller->getState() == ST_PLACING_SHIPS )
-//        ui->labelOpponent->clear();
+    if( controller->getState() == ST_PLACING_SHIPS )
+        ui->labelOpponent->clear();
 
-//    if( controller->getState() == ST_PLACING_SHIPS )
-//    {
-//        ui->actionStart->setDisabled(false);
-//        ui->actionLeave->setDisabled(true);
-//        ui->menuField->setDisabled(false);
-//    }
-//    else
-//    {
-//        ui->actionStart->setDisabled(true);
-//        ui->actionLeave->setDisabled(false);
-//        ui->menuField->setDisabled(true);
-//    }
+    if( controller->getState() == ST_PLACING_SHIPS )
+    {
+        ui->actionStart->setDisabled(false);
+        ui->actionLeave->setDisabled(true);
+        ui->menuField->setDisabled(false);
+    }
+    else
+    {
+        ui->actionStart->setDisabled(true);
+        ui->actionLeave->setDisabled(false);
+        ui->menuField->setDisabled(true);
+    }
 
     this->update();
 }
@@ -188,3 +190,9 @@ void MainWindow::on_actionStart_triggered() {
 }
 
 
+void MainWindow::on_actionQuit_triggered()
+{
+    this->close();
+    // here shoul be some more logic
+    emit menu();
+}

@@ -5,7 +5,7 @@
 
 Client::Client(QTcpSocket* socket)
     : client(socket) {
-    qDebug() << client_data;
+//    qDebug() << client_data;
     connect(client, SIGNAL(readyRead()), this, SLOT(sl_dataReceived()));
 }
 
@@ -27,4 +27,3 @@ void Client::sl_dataReceived() {
 QTcpSocket* Client::ptr() {
     return client;
 }
-

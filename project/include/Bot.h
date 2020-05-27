@@ -7,13 +7,17 @@
 
 class Bot : public Player {
 public:
-    Bot() {current_ship_target = {0, 0};} ;
-    virtual ~Bot();
+    Bot() {
+        current_ship_target = {0, 0};
+        target_orientation = orientation::undefined;
+    }
+    virtual ~Bot() = default;
     virtual bool is_bot() const noexcept override;
-    std::pair<int, int> make_fight_step(Player* other_player);
+    std::pair<std::size_t, std::size_t> make_fight_step(Player* other_player);
     void make_placement();
 private:
-    std::pair<int, int> current_ship_target;
+    std::pair<std::size_t, std::size_t> current_ship_target;
+    orientation target_orientation;
 };
 
 

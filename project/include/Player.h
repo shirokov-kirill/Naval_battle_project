@@ -14,10 +14,9 @@
 class Player {
 
 public:
-        Board board; // sorry i had to do it to make it work
 
   Player() noexcept;
-	virtual ~Player();
+    virtual ~Player() = default;
 	Player& operator=(Player&) noexcept ;
 
 	void increase_score(int) noexcept ;
@@ -34,6 +33,7 @@ public:
 	bool is_visible(int, int, int);
 	Ships get_cell(int, int);
 	bool place_ship(ShipPlacement);
+    bool can_place_ship(ShipPlacement);
 
 	int get_cur_ship();
 	void inc_ship();
@@ -44,7 +44,7 @@ public:
   void set_board_from_string(std::string src);
 
 private:
-
+    Board board;
 	int score;
 	int combo;
 	std::string name;

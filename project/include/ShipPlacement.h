@@ -19,6 +19,7 @@ enum class Ships {
 enum class orientation {
     horizontal = 0,
     vertical = 1,
+    undefined = -1
 };
 
 struct ShipPlacement {

@@ -18,7 +18,7 @@ void Images::load()
     images.insert( "half", QImage(":/img/images/half.png") );
     images.insert( "redhalf", QImage(":/img/images/redhalf.png") );
     images.insert( "redfull", QImage(":/img/images/redfull.png") );
-//    images.insert( "about", QImage(":/about.png") );
+    images.insert( "about", QImage(":/img/images/zastavka.png") );
     isLoaded_ = true;
 }
 

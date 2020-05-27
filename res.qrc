@@ -6,5 +6,8 @@
         <file>images/half.png</file>
         <file>images/redfull.png</file>
         <file>images/redhalf.png</file>
+		<file>images/zastavka.png</file>
+		<file>images/win.png</file>
+		<file>images/lose.png</file>
     </qresource>
 </RCC>
