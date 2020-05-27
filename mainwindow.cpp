@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect( controller.get(), SIGNAL(stateChanged()), this, SLOT(redraw()) );
     connect( controller.get(), SIGNAL(stateLabelChanged()), this, SLOT(changeStateLabel()) );
     connect( controller.get(), SIGNAL(labelOpponentChanged()), this, SLOT(changeLabelOpponent()));
+    connect(controller.get(), SIGNAL(GameResult(GameResult)), this, SLOT(showGameResult(GameResult)));
 //    connect(this, SIGNAL(sig_connectToServer()), controller, SLOT(sl_connectToServer()));
 //    connect(this, SIGNAL(sig_sendData()), controller, SLOT(sl_sendAuthData()));
 
@@ -61,24 +62,22 @@ QImage MainWindow::getFieldImage( char fld )
     Ships cell;
     image.fill( 0 );
     QPainter painter( &image );
-
     double cfx = 1.0 * FIELD_WIDTH / 10.0;
     double cfy = 1.0 * FIELD_HEIGHT / 10.0;
-
     for( int i = 0; i < 10; i++ )
         for( int j = 0; j < 10; j++ )
         {
             int i1 = i+1, j1 = j+1;
-
             if (fld == 0) {
                   cell = controller->myPlayer()->get_cell( i1, j1 );
             }
             else {
                   cell = Ships::water;
-                  if (controller->enemyPlayer()->is_visible(i1, j1, 0))
+                  if (controller->enemyPlayer()->is_visible(i1, j1, 0) ||
+                          controller->enemyPlayer()->get_cell(i1, j1) == Ships::fire ||
+                          controller->enemyPlayer()->get_cell(i1, j1) == Ships::drownen_ship)
                       cell = controller->enemyPlayer()->get_cell(i1, j1);
             }
-
             if (cell == Ships::water) {
                 if (fld == 0)
                     if (controller->myPlayer()->is_visible(i1, j1, 1))
@@ -88,12 +87,14 @@ QImage MainWindow::getFieldImage( char fld )
                     if (controller->enemyPlayer()->is_visible(i1, j1, 0))
                         painter.drawImage( i * cfx, j * cfy, pictures.get("dot") );
             }
-
             else if (cell == Ships::fire) {
                 if (fld == 0)
                     painter.drawImage( i * cfx, j * cfy, pictures.get("redhalf") );
                 else
-                    painter.drawImage( i * cfx, j * cfy, pictures.get("half") );
+                    painter.drawImage( i * cfx, j * cfy, pictures.get("redhalf") );
+            }
+            else if (cell == Ships::drownen_ship) {
+                    painter.drawImage( i * cfx, j * cfy, pictures.get("redfull") );
             }
             else {
                 painter.drawImage( i * cfx, j * cfy, pictures.get("full") );
@@ -109,8 +110,14 @@ void MainWindow::mousePressEvent( QMouseEvent* ev )
     orientation ori = orientation::vertical;
     if (ev->button() == Qt::RightButton) ori = orientation::horizontal;
     pos.setY( pos.y() - this->centralWidget()->y() );
-    controller->onMousePressed( pos, ori );
-    redraw();
+    int res = controller->onMousePressed( pos, ori );
+    if (res != 0) {
+        finwin = new FinalWindow;
+        finwin->result = res;
+        finwin = new FinalWindow(res);
+        finwin->show();
+        this->close();
+    }
 }
 
 void MainWindow::closeEvent( QCloseEvent* event )
@@ -193,6 +200,6 @@ void MainWindow::on_actionStart_triggered() {
 void MainWindow::on_actionQuit_triggered()
 {
     this->close();
-    // here shoul be some more logic
+    // here should be some more logic maybe
     emit menu();
 }
