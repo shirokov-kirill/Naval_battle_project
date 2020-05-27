@@ -163,15 +163,25 @@ void Controller::parseAuth(const QStringList &args) {
         return;
     enemyPlayer()->set_name(args[1].toStdString());
 //    enemyPlayer()->setField(args[2].toStdString());
+    enemyPlayer()->set_board_from_string((args[2].toStdString()));
 
     emit labelOpponentChanged();
-//    sendOk();
 }
 
 void Controller::parseStep(const QStringList &args) {
-    if (args[0] != QString("step"))
+    if (args.at(0) != QString("step"))
         return;
-
+    int x = args.at(1).toInt(), y = args.at(2).toInt();
+    qDebug() << x << ' ' << y;
+    myPlayer()->get_shot(x, y, 1);
+    if (myPlayer()->get_cell(x, y) == Ships::fire || myPlayer()->get_cell(x, y) == Ships::drownen_ship)
+        setState(State::ST_WAITING_STEP);
+    else {
+        setState(State::ST_MAKING_STEP);
+    }
+    if (!myPlayer()->is_alive()) {
+        emit gameResult(GR_LOST);
+    }
 }
 
 void Controller::parseGiveAuth(const QStringList &args) {
@@ -212,14 +222,6 @@ void Controller::on_errorRecieved(QAbstractSocket::SocketError err) {
 }
 
 void Controller::sendStep(const QPoint &point) {
-    int x = point.x()+1, y = point.y()+1;
-    enemyPlayer()->get_shot(x, y, 0);
-    qDebug() << "cell fired: " << x << ' ' << y;
-    qDebug() << "cell state now: " << (int)(enemyPlayer()->get_cell(x, y));
-    if (enemyPlayer()->get_cell(x, y) == Ships::fire || enemyPlayer()->get_cell(x, y) == Ships::drownen_ship)
-        setState(State::ST_MAKING_STEP);
-    else
-        setState(State::ST_WAITING_STEP);
     qDebug() << "step sended!";
     qDebug() << QString("step:") << QString(x) << ":" << QString(y) << ":";
     QTextStream os(client.get());
