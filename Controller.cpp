@@ -177,7 +177,7 @@ void Controller::parseStep(const QStringList &args) {
 void Controller::parseGiveAuth(const QStringList &args) {
     if (args[0] != QString("giveauth"))
         return;
-    sendAuthData(QString::fromStdString(myPlayer()->get_name()), "0101023049304");
+    sendAuthData(QString::fromStdString(myPlayer()->get_name()), QString::fromStdString(myPlayer()->convert_to_string()));
 }
 
 void Controller::sendOk() {
@@ -209,5 +209,25 @@ void Controller::on_errorRecieved(QAbstractSocket::SocketError err) {
                          QString(client->errorString())
                         );
     qDebug() << strError;
+}
+
+void Controller::sendStep(const QPoint &point) {
+    int x = point.x()+1, y = point.y()+1;
+    enemyPlayer()->get_shot(x, y, 0);
+    qDebug() << "cell fired: " << x << ' ' << y;
+    qDebug() << "cell state now: " << (int)(enemyPlayer()->get_cell(x, y));
+    if (enemyPlayer()->get_cell(x, y) == Ships::fire || enemyPlayer()->get_cell(x, y) == Ships::drownen_ship)
+        setState(State::ST_MAKING_STEP);
+    else
+        setState(State::ST_WAITING_STEP);
+    qDebug() << "step sended!";
+    qDebug() << QString("step:") << QString(x) << ":" << QString(y) << ":";
+    QTextStream os(client.get());
+    os.setAutoDetectUnicode(true);
+    os <<  QString("step:%1:%2").arg(x).arg(y);
+    client->flush();
+    if (!enemyPlayer()->is_alive()) {
+        emit gameResult(GR_WON);
+    }
 }
 
