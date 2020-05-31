@@ -2,7 +2,7 @@
 Для сборки проекта требуется qmake. Собирать лучше в отдельной папке, т.к. появляется много промежуточных файлов.
 
 ```
-qmake client.pro
+qmake naval_battle.pro
 make
-client.exe
+naval_battle.exe
 ```
