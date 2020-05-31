@@ -83,6 +83,8 @@ int Controller::onMousePressed( const QPoint& pos, orientation ori ) {
             return 1;
         }
 
+        if (!enemyPlayer()->is_bot()) sendStep(point);
+
         if (state == State::ST_WAITING_STEP && enemyPlayer()->is_bot()) {
             qDebug() << "bot turn ------------";
             std::pair<int, int> bot_step = dynamic_cast<Bot*>(enemyPlayer())->make_fight_step(myPlayer());
@@ -222,6 +224,8 @@ void Controller::on_errorRecieved(QAbstractSocket::SocketError err) {
 }
 
 void Controller::sendStep(const QPoint &point) {
+    int x = point.x();
+    int y = point.y();
     qDebug() << "step sended!";
     qDebug() << QString("step:") << QString(x) << ":" << QString(y) << ":";
     QTextStream os(client.get());

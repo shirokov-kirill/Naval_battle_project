@@ -63,6 +63,7 @@ public:
     void connectToServer();
     void sendAuthData(const QString &name, const QString &field);
     void sendOk();
+    void sendStep(const QPoint &point);
 
 private slots:
     void on_dataRecieved();

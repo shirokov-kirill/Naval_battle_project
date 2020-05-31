@@ -9,15 +9,15 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , controller(std::make_unique<Controller>())
+    , controller(new Controller)
 {
     ui->setupUi(this);
     pictures.load();
 
-    connect( controller.get(), SIGNAL(stateChanged()), this, SLOT(redraw()) );
-    connect( controller.get(), SIGNAL(stateLabelChanged()), this, SLOT(changeStateLabel()) );
-    connect( controller.get(), SIGNAL(labelOpponentChanged()), this, SLOT(changeLabelOpponent()));
-    connect(controller.get(), SIGNAL(GameResult(GameResult)), this, SLOT(showGameResult(GameResult)));
+    connect( controller, SIGNAL(stateChanged()), this, SLOT(redraw()) );
+    connect( controller, SIGNAL(stateLabelChanged()), this, SLOT(changeStateLabel()) );
+    connect( controller, SIGNAL(labelOpponentChanged()), this, SLOT(changeLabelOpponent()));
+    connect( controller, SIGNAL(GameResult(GameResult)), this, SLOT(showGameResult(GameResult)));
 //    connect(this, SIGNAL(sig_connectToServer()), controller, SLOT(sl_connectToServer()));
 //    connect(this, SIGNAL(sig_sendData()), controller, SLOT(sl_sendAuthData()));
 
@@ -113,8 +113,6 @@ void MainWindow::mousePressEvent( QMouseEvent* ev )
     pos.setY( pos.y() - this->centralWidget()->y() );
     int res = controller->onMousePressed( pos, ori );
     if (res != 0) {
-        finwin = new FinalWindow;
-        finwin->result = res;
         finwin = new FinalWindow(res);
         finwin->show();
         this->close();
